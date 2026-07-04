@@ -1,0 +1,6 @@
+boilerplate: webdevful-astro-boilerplate
+stamp_date: 2026-06-25
+astro: ^7.0.3
+seed_source: npm create astro@latest --template minimal
+refresh_tool: /Volumes/WDF-NAS-01/01-WOS/Agent-System/Tooling/Boilerplate/refresh_official_astro_seed.sh
+create_tool: tools/create_from_boilerplate.sh
