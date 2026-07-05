@@ -3,3 +3,9 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 /* Reveal repair (First Article return): finish the frozen GSAP animation. */
 .wdf-frozen{transition:opacity .7s ease,transform .7s ease,translate .7s ease}
 .wdf-revealed{opacity:1!important;transform:none!important;translate:none!important}
+
+/* Brand repair: 9-letter 'surfhaven' watermark fits the 6-letter track. */
+.big-letter{font-size:16.6vw !important}
+
+/* Navbar scroll-invert repair: white logo at top, inverted on the scrolled bar. */
+.navbar.is-scrolled .brand-link img{filter:invert(1)}
