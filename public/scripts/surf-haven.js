@@ -250,58 +250,178 @@
   /* ─────────────────────────────────────────────────────────────────
    * 7. HERO SWIPER
    * ──────────────────────────────────────────────────────────────── */
-  function initHeroSwiper() {
-    if (typeof Swiper === 'undefined') return;
-    const heroEl = qs('.hero-slider, .w-slider');
-    if (!heroEl) return;
-    // Only init if we have multiple slides
-    const slides = qsa('.w-slide, .hero-slide', heroEl);
-    if (slides.length < 2) return;
-    new Swiper(heroEl, {
-      loop: true,
-      autoplay: { delay: 4500, disableOnInteraction: false },
-      speed: 800,
-      effect: 'fade',
-    });
-  }
 
   /* ─────────────────────────────────────────────────────────────────
    * 8. INTERSECTION OBSERVER – fade-in content visibility
    * ──────────────────────────────────────────────────────────────── */
   function initReveal() {
-    // The captured source markup froze GSAP mid-animation: inline opacity<1
-    // and translate()/translate3d offsets with no runtime to complete them
-    // (First Article return, defect class 2). Find every frozen element and
-    // finish the animation with a lightweight fade/slide-in.
-    const frozen = qsa('[style*="opacity"]').filter(function (el) {
-      const o = parseFloat(el.style.opacity);
+    // Owner return pass 2: reproduce the SOURCE runtime (GSAP 3.15 +
+    // ScrollTrigger + SplitText are vendored locally, same versions the
+    // Webflow source loads). The captured markup already carries the
+    // .gsap_split_line masks — animate them the way the source does.
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var frozen = qsa('[style*="opacity"]').filter(function (el) {
+      var o = parseFloat(el.style.opacity);
       return !isNaN(o) && o < 1;
     });
-    const shifted = qsa('[style*="transform"]').filter(function (el) {
+    var shifted = qsa('[style*="transform"]').filter(function (el) {
       return /translate\(\s*-?\d/.test(el.style.transform || '');
     });
-    const items = Array.from(new Set(frozen.concat(shifted)));
-    if (!items.length) return;
-    items.forEach(function (el) { el.classList.add('wdf-frozen'); });
 
-    function reveal(el) { el.classList.add('wdf-revealed'); }
-
-    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || !('IntersectionObserver' in window)) {
-      items.forEach(reveal);
+    if (reduced || typeof gsap === 'undefined') {
+      frozen.concat(shifted).forEach(function (el) { el.classList.add('wdf-frozen', 'wdf-revealed'); });
       return;
     }
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          reveal(entry.target);
-          io.unobserve(entry.target);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Split-line headings: lines rise out of their overflow masks.
+    var seen = new Set();
+    qsa('.gsap_split_line-mask').forEach(function (mask) {
+      var heading = mask.closest('h1,h2,h3,.heading-h1,.heading-h2') || mask.parentElement;
+      if (seen.has(heading)) return;
+      seen.add(heading);
+      var lines = Array.prototype.slice.call(heading.querySelectorAll('.gsap_split_line'));
+      if (!lines.length) return;
+      gsap.set(lines, { yPercent: 105, opacity: 1 });
+      gsap.to(lines, {
+        yPercent: 0,
+        duration: 1.1,
+        ease: 'power4.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: heading, start: 'top 88%', once: true },
+        onComplete: function () { lines.forEach(function (l) { l.classList.add('wdf-revealed'); }); }
+      });
+    });
+
+    // 2. Everything else frozen mid-animation: fade/slide to rest.
+    var rest = frozen.concat(shifted).filter(function (el) {
+      return !el.closest('.gsap_split_line') && !el.classList.contains('gsap_split_line') &&
+             !el.classList.contains('w-dropdown-list');
+    });
+    Array.from(new Set(rest)).forEach(function (el) {
+      gsap.to(el, {
+        autoAlpha: 1, x: 0, y: 0,
+        duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        onComplete: function () { el.classList.add('wdf-revealed'); }
+      });
+    });
+
+    // Safety net: nothing stays invisible even if a trigger misfires.
+    window.setTimeout(function () {
+      frozen.concat(shifted).forEach(function (el) { el.classList.add('wdf-frozen', 'wdf-revealed'); });
+      qsa('.gsap_split_line').forEach(function (l) { l.classList.add('wdf-frozen', 'wdf-revealed'); });
+    }, 4000);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+   * WEBFLOW SLIDERS – arrows, autoplay, infinite (source behavior)
+   * ──────────────────────────────────────────────────────────────── */
+  function initWebflowSliders() {
+    // Port the source's Webflow sliders onto the registered tech stack
+    // (Swiper 11, vendored locally): remap w-slider markup to Swiper DOM at
+    // runtime and drive arrows/autoplay through real Swiper instances.
+    if (typeof Swiper === 'undefined') return;
+    qsa('.w-slider').forEach(function (slider) {
+      var mask = qs('.w-slider-mask', slider);
+      if (!mask) return;
+      var slides = Array.prototype.slice.call(mask.children).filter(function (c) {
+        return c.classList.contains('w-slide');
+      });
+      if (slides.length < 2) return;
+      slider.classList.add('swiper');
+      mask.classList.add('swiper-wrapper');
+      slides.forEach(function (s) { s.classList.add('swiper-slide'); });
+      var autoplay = slider.getAttribute('data-autoplay') === 'true';
+      var delay = Math.max(parseInt(slider.getAttribute('data-delay') || '4000', 10), 2500);
+      var duration = Math.min(parseInt(slider.getAttribute('data-duration') || '300', 10), 300);
+      new Swiper(slider, {
+        loop: true,
+        speed: 150,
+        slidesPerView: 'auto',
+        loopPreventsSliding: false,
+        autoplay: autoplay ? { delay: delay, pauseOnMouseEnter: true } : false,
+        navigation: {
+          prevEl: qs('.w-slider-arrow-left', slider),
+          nextEl: qs('.w-slider-arrow-right', slider)
         }
       });
-    }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
-    items.forEach(function (el) { io.observe(el); });
-    // Safety net: nothing stays invisible even if the observer misfires.
-    window.setTimeout(function () { items.forEach(reveal); }, 3000);
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+   * DROPDOWNS – nav menus (hover+click) and collapsibles (source behavior)
+   * ──────────────────────────────────────────────────────────────── */
+  function initDropdowns() {
+    qsa('.w-dropdown').forEach(function (dd) {
+      var toggle = qs('.w-dropdown-toggle', dd);
+      var list = qs('.w-dropdown-list', dd);
+      if (!toggle || !list) return;
+      var inNav = !!dd.closest('.navbar, .w-nav');
+      function setOpen(open) {
+        dd.classList.toggle('w--open', open);
+        toggle.classList.toggle('w--open', open);
+        list.classList.toggle('w--open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (list.style.height === '0px' && open) list.style.height = 'auto';
+        if (!open && list.getAttribute('data-collapsible') === 'true') list.style.height = '0px';
+      }
+      if (list.style.height === '0px') list.setAttribute('data-collapsible', 'true');
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        setOpen(!dd.classList.contains('w--open'));
+      });
+      if (inNav) {
+        dd.addEventListener('mouseenter', function () { setOpen(true); });
+        dd.addEventListener('mouseleave', function () { setOpen(false); });
+      }
+      document.addEventListener('click', function (e) {
+        if (!dd.contains(e.target)) setOpen(false);
+      });
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+   * VIDEO LIGHTBOX – "Watch our video diaries!" plays a real local video
+   * ──────────────────────────────────────────────────────────────── */
+  function initVideoLightbox() {
+    var link = qs('[data-video]');
+    if (!link) return;
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      var overlay = document.createElement('div');
+      overlay.className = 'wdf-lightbox';
+      overlay.innerHTML =
+        '<div class="wdf-lightbox-inner">' +
+        '<button class="wdf-lightbox-close" aria-label="Close video">&times;</button>' +
+        '<video src="' + link.getAttribute('data-video') + '" controls autoplay playsinline></video>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+      function close() {
+        overlay.remove();
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKey);
+      }
+      function onKey(ev) { if (ev.key === 'Escape') close(); }
+      overlay.addEventListener('click', function (ev) {
+        if (ev.target === overlay || ev.target.classList.contains('wdf-lightbox-close')) close();
+      });
+      document.addEventListener('keydown', onKey);
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+   * WLFS LOGO SWAP – white lockup on dark hero, dark lockup on scrolled bar
+   * ──────────────────────────────────────────────────────────────── */
+  function initLogoSwap() {
+    var img = qs('.brand-link img');
+    if (!img) return;
+    var white = '/assets/img/logo/surf-haven/logo_white.png';
+    var dark = '/assets/img/logo/surf-haven/logo.png';
+    window.addEventListener('scroll', function () {
+      img.src = window.scrollY > 60 ? dark : white;
+    }, { passive: true });
   }
 
   /* ─────────────────────────────────────────────────────────────────
@@ -330,15 +450,17 @@
     initRoomAccordion();
     initOverlay();
     initReveal();
+    initWebflowSliders();
+    initDropdowns();
+    initVideoLightbox();
+    initLogoSwap();
     initSmoothScroll();
     // Swiper – waits for the CDN script
     if (typeof Swiper !== 'undefined') {
       initRoomGallery();
-      initHeroSwiper();
     } else {
       document.addEventListener('swiper-ready', function () {
         initRoomGallery();
-        initHeroSwiper();
       });
     }
   }

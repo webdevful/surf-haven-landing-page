@@ -8,9 +8,10 @@ import '../styles/main.css';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Surf Haven — Surf Camp in Canggu, Bali</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" href="/favicon.ico" />
+  <title>Surf Haven | Surf Camp in Canggu, Bali</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/logo/surf-haven/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/logo/surf-haven/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/assets/img/logo/surf-haven/favicon.png" />
   <link rel="stylesheet" href="/scripts/swiper-bundle.min.css" />
 </head>
 <body class="body">
@@ -243,14 +244,14 @@ import '../styles/main.css';
         </div>
        </div>
        <div class="slider-wrap" id="w-node-_4ef50234-6607-ca98-5d4f-7d69c383a6d4-f2b4ae30" style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate3d(0px, 0px, 0px);">
-        <div aria-label="carousel" class="slider is-overview w-slider" data-animation="slide" data-autoplay="true" data-autoplay-limit="0" data-delay="10000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
+        <div aria-label="carousel" class="slider is-overview w-slider swiper" data-animation="slide" data-autoplay="true" data-autoplay-limit="0" data-delay="10000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
          <div class="badge u-frost is-absolute">
           <div>
            trip highlights
           </div>
          </div>
-         <div class="w-slider-mask" id="w-slider-mask-0">
-          <div aria-label="1 of 4" class="slide w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div class="w-slider-mask swiper swiper-wrapper" id="w-slider-mask-0">
+          <div aria-label="1 of 4" class="slide w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
            <div class="image-wrap u-absolute-full">
             <img alt="Group of friends standing on rocks in front of a tall tropical waterfall." height="1201" loading="lazy" src="/assets/img/waterfall-group.avif" width="900"/>
            </div>
@@ -267,7 +268,7 @@ import '../styles/main.css';
             </div>
            </div>
           </div>
-          <div aria-hidden="true" aria-label="2 of 4" class="slide w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+          <div aria-hidden="true" aria-label="2 of 4" class="slide w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
            <div aria-hidden="true" class="image-wrap u-absolute-full">
             <img alt="Two people practicing surfing stances on surfboards on a sandy beach with lush greenery and rocks in the background." aria-hidden="true" height="1200" loading="lazy" src="/assets/img/surfing-beach.avif" width="900"/>
            </div>
@@ -284,7 +285,7 @@ import '../styles/main.css';
             </div>
            </div>
           </div>
-          <div aria-hidden="true" aria-label="3 of 4" class="slide w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+          <div aria-hidden="true" aria-label="3 of 4" class="slide w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
            <div aria-hidden="true" class="image-wrap u-absolute-full">
             <img alt="Three people relaxing by a pool surrounded by lush greenery and tropical plants, with a wooden villa in the background." aria-hidden="true" height="1200" loading="lazy" src="/assets/img/villa-jungle.avif" width="900"/>
            </div>
@@ -301,7 +302,7 @@ import '../styles/main.css';
             </div>
            </div>
           </div>
-          <div aria-hidden="true" aria-label="4 of 4" class="slide w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+          <div aria-hidden="true" aria-label="4 of 4" class="slide w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
            <div aria-hidden="true" class="image-wrap u-absolute-full">
             <img alt="Four people sitting on grass in a circle with four surfboards standing upright against tropical greenery behind them." aria-hidden="true" height="1200" loading="lazy" src="/assets/img/surfers-circle.avif" width="900"/>
            </div>
@@ -316,10 +317,10 @@ import '../styles/main.css';
             </div>
            </div>
           </div>
-          <div aria-atomic="true" aria-live="off" class="w-slider-aria-label" data-wf-ignore="">
+          <div aria-atomic="true" aria-live="off" class="w-slider-aria-label swiper" data-wf-ignore="">
           </div>
          </div>
-         <div aria-controls="w-slider-mask-0" aria-label="previous slide" class="left-arrow is-frost-on-image u-absolute-top-right w-slider-arrow-left" role="button" tabindex="0">
+         <div aria-controls="w-slider-mask-0" aria-label="previous slide" class="left-arrow is-frost-on-image u-absolute-top-right w-slider-arrow-left swiper" role="button" tabindex="0">
           <div class="arrow-icon w-embed">
            <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="m6 9 6 6 6-6">
@@ -327,7 +328,7 @@ import '../styles/main.css';
            </svg>
           </div>
          </div>
-         <div aria-controls="w-slider-mask-0" aria-label="next slide" class="right-arrow is-frost-on-image u-absolute-top-right w-slider-arrow-right" role="button" tabindex="0">
+         <div aria-controls="w-slider-mask-0" aria-label="next slide" class="right-arrow is-frost-on-image u-absolute-top-right w-slider-arrow-right swiper" role="button" tabindex="0">
           <div class="arrow-icon w-embed">
            <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="m6 9 6 6 6-6">
@@ -335,14 +336,14 @@ import '../styles/main.css';
            </svg>
           </div>
          </div>
-         <div class="slide-nav is-hidden w-slider-nav w-round">
-          <div aria-label="Show slide 1 of 4" aria-pressed="true" class="w-slider-dot w-active" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
+         <div class="slide-nav is-hidden w-slider-nav w-round swiper">
+          <div aria-label="Show slide 1 of 4" aria-pressed="true" class="w-slider-dot w-active swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
           </div>
-          <div aria-label="Show slide 2 of 4" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+          <div aria-label="Show slide 2 of 4" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
           </div>
-          <div aria-label="Show slide 3 of 4" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+          <div aria-label="Show slide 3 of 4" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
           </div>
-          <div aria-label="Show slide 4 of 4" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+          <div aria-label="Show slide 4 of 4" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
           </div>
          </div>
         </div>
@@ -2890,9 +2891,9 @@ import '../styles/main.css';
     <div class="w-layout-blockcontainer container-standard w-container">
      <div class="w-layout-grid layout-grid">
       <div class="slider-wrap" id="w-node-_43e575a5-747b-91e3-85a8-60a43d77cd9b-f2b4ae30">
-       <div aria-label="carousel" class="slider is-instructors w-slider" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
-        <div class="w-slider-mask" id="w-slider-mask-1">
-         <div aria-label="1 of 2" class="slide is-instructors w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+       <div aria-label="carousel" class="slider is-instructors w-slider swiper" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
+        <div class="w-slider-mask swiper swiper-wrapper" id="w-slider-mask-1">
+         <div aria-label="1 of 2" class="slide is-instructors w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div class="image-wrap u-absolute-full">
            <img alt="A smiling professional surf instructor in a black wetsuit holding a white surfboard against a lush tropical jungle background." height="854" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 940px" src="/assets/img/5010 1.webp" srcset="/assets/img/5010 1-p-500.webp 500w, /assets/img/5010 1-p-800.webp 800w, /assets/img/5010 1-p-1080.webp 1080w, /assets/img/5010 1.webp 1360w" width="940"/>
           </div>
@@ -2936,7 +2937,7 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-hidden="true" aria-label="2 of 2" class="slide is-instructors w-slide" data-w-id="43e575a5-747b-91e3-85a8-60a43d77cdb5" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div aria-hidden="true" aria-label="2 of 2" class="slide is-instructors w-slide swiper-slide" data-w-id="43e575a5-747b-91e3-85a8-60a43d77cdb5" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div aria-hidden="true" class="image-wrap u-absolute-full">
            <img alt="A portrait of a friendly man in a wetsuit posing with his surfboard in front of vibrant green palm leaves." aria-hidden="true" height="1237" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 940px" src="/assets/img/surf-coach-02.webp" srcset="/assets/img/surf-coach-02-p-500.webp 500w, /assets/img/surf-coach-02-p-800.webp 800w, /assets/img/surf-coach-02-p-1080.webp 1080w, /assets/img/surf-coach-02.webp 1360w" width="1360"/>
           </div>
@@ -2980,10 +2981,10 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-atomic="true" aria-live="off" class="w-slider-aria-label" data-wf-ignore="">
+         <div aria-atomic="true" aria-live="off" class="w-slider-aria-label swiper" data-wf-ignore="">
          </div>
         </div>
-        <div aria-controls="w-slider-mask-1" aria-label="previous slide" class="left-arrow is-frost-on-image u-absolute-bottom-right w-slider-arrow-left" role="button" tabindex="0">
+        <div aria-controls="w-slider-mask-1" aria-label="previous slide" class="left-arrow is-frost-on-image u-absolute-bottom-right w-slider-arrow-left swiper" role="button" tabindex="0">
          <div class="arrow-icon w-embed">
           <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
            <path d="m6 9 6 6 6-6">
@@ -2991,7 +2992,7 @@ import '../styles/main.css';
           </svg>
          </div>
         </div>
-        <div aria-controls="w-slider-mask-1" aria-label="next slide" class="right-arrow is-frost-on-image u-absolute-bottom-right w-slider-arrow-right" role="button" tabindex="0">
+        <div aria-controls="w-slider-mask-1" aria-label="next slide" class="right-arrow is-frost-on-image u-absolute-bottom-right w-slider-arrow-right swiper" role="button" tabindex="0">
          <div class="arrow-icon w-embed">
           <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
            <path d="m6 9 6 6 6-6">
@@ -2999,10 +3000,10 @@ import '../styles/main.css';
           </svg>
          </div>
         </div>
-        <div class="slide-nav is-hidden w-slider-nav">
-         <div aria-label="Show slide 1 of 2" aria-pressed="true" class="w-slider-dot w-active" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
+        <div class="slide-nav is-hidden w-slider-nav swiper">
+         <div aria-label="Show slide 1 of 2" aria-pressed="true" class="w-slider-dot w-active swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
          </div>
-         <div aria-label="Show slide 2 of 2" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+         <div aria-label="Show slide 2 of 2" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
          </div>
         </div>
        </div>
@@ -3124,8 +3125,10 @@ import '../styles/main.css';
          A glimpse into life at our camp
         </p>
        </div>
-       <a class="video-link w-inline-block" href="https://www.youtube.com/" target="_blank">
-        <div class="video-thumbnail">
+       <a class="video-link w-inline-block" data-video="/assets/video/surf-diaries.mp4" href="#video">
+        <div class="video-thumbnail"><video autoplay loop muted playsinline preload="metadata" src="/assets/video/surf-diaries.mp4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+          </video>
+          
          <div class="play-icon u-absolute-full w-embed">
           <svg height="100%" viewbox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
            <path d="M6.25 6.68306C6.25 4.92284 8.18058 3.84451 9.67969 4.76704L18.3174 10.0825C19.7447 10.9611 19.7447 13.0359 18.3174 13.9145L9.67969 19.2299C8.18058 20.1525 6.25 19.0741 6.25 17.3139V6.68306Z" fill="currentColor">
@@ -3149,9 +3152,9 @@ import '../styles/main.css';
         </div>
        </a>
       </div>
-      <div aria-label="carousel" class="slider is-testimonials w-slider" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" id="w-node-_0abc99a5-fbf2-bb70-fee3-442e250633b1-f2b4ae30" role="region">
-       <div class="testimonials-slider-mask w-slider-mask" id="w-slider-mask-2">
-        <div aria-label="1 of 3" class="slide is-testimonials w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+      <div aria-label="carousel" class="slider is-testimonials w-slider swiper" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" id="w-node-_0abc99a5-fbf2-bb70-fee3-442e250633b1-f2b4ae30" role="region">
+       <div class="testimonials-slider-mask w-slider-mask swiper swiper-wrapper" id="w-slider-mask-2">
+        <div aria-label="1 of 3" class="slide is-testimonials w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
          <div class="slide-content">
           <div class="u-flex-row">
            <div class="image-circle-wrap">
@@ -3186,7 +3189,7 @@ import '../styles/main.css';
           </div>
          </div>
         </div>
-        <div aria-hidden="true" aria-label="2 of 3" class="slide is-testimonials w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+        <div aria-hidden="true" aria-label="2 of 3" class="slide is-testimonials w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
          <div aria-hidden="true" class="slide-content">
           <div aria-hidden="true" class="u-flex-row">
            <div aria-hidden="true" class="image-circle-wrap">
@@ -3221,7 +3224,7 @@ import '../styles/main.css';
           </div>
          </div>
         </div>
-        <div aria-hidden="true" aria-label="3 of 3" class="slide is-testimonials w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+        <div aria-hidden="true" aria-label="3 of 3" class="slide is-testimonials w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
          <div aria-hidden="true" class="slide-content">
           <div aria-hidden="true" class="u-flex-row">
            <div aria-hidden="true" class="image-circle-wrap">
@@ -3257,10 +3260,10 @@ import '../styles/main.css';
           </div>
          </div>
         </div>
-        <div aria-atomic="true" aria-live="off" class="w-slider-aria-label" data-wf-ignore="">
+        <div aria-atomic="true" aria-live="off" class="w-slider-aria-label swiper" data-wf-ignore="">
         </div>
        </div>
-       <div aria-controls="w-slider-mask-2" aria-label="previous slide" class="left-arrow u-absolute-top-right w-slider-arrow-left" role="button" tabindex="0">
+       <div aria-controls="w-slider-mask-2" aria-label="previous slide" class="left-arrow u-absolute-top-right w-slider-arrow-left swiper" role="button" tabindex="0">
         <div class="arrow-icon w-embed">
          <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path d="m6 9 6 6 6-6">
@@ -3268,7 +3271,7 @@ import '../styles/main.css';
          </svg>
         </div>
        </div>
-       <div aria-controls="w-slider-mask-2" aria-label="next slide" class="right-arrow u-absolute-top-right w-slider-arrow-right" role="button" tabindex="0">
+       <div aria-controls="w-slider-mask-2" aria-label="next slide" class="right-arrow u-absolute-top-right w-slider-arrow-right swiper" role="button" tabindex="0">
         <div class="arrow-icon w-embed">
          <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path d="m6 9 6 6 6-6">
@@ -3276,12 +3279,12 @@ import '../styles/main.css';
          </svg>
         </div>
        </div>
-       <div class="slide-nav is-hidden w-slider-nav">
-        <div aria-label="Show slide 1 of 3" aria-pressed="true" class="w-slider-dot w-active" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
+       <div class="slide-nav is-hidden w-slider-nav swiper">
+        <div aria-label="Show slide 1 of 3" aria-pressed="true" class="w-slider-dot w-active swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
         </div>
-        <div aria-label="Show slide 2 of 3" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+        <div aria-label="Show slide 2 of 3" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
         </div>
-        <div aria-label="Show slide 3 of 3" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+        <div aria-label="Show slide 3 of 3" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
         </div>
        </div>
       </div>
@@ -4298,9 +4301,9 @@ import '../styles/main.css';
        </p>
       </div>
       <div class="team-body" id="w-node-_22fe9cd3-bc58-b1f9-ea5d-f6753de580bf-f2b4ae30">
-       <div aria-label="carousel" class="slider is-team w-slider" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease-in-out" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
-        <div class="team-slider-mask w-slider-mask" id="w-slider-mask-3">
-         <div aria-label="1 of 5" class="slide is-team w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+       <div aria-label="carousel" class="slider is-team w-slider swiper" data-animation="slide" data-autoplay="false" data-autoplay-limit="0" data-delay="4000" data-disable-swipe="false" data-duration="500" data-easing="ease-in-out" data-hide-arrows="false" data-infinite="true" data-nav-spacing="3" role="region">
+        <div class="team-slider-mask w-slider-mask swiper swiper-wrapper" id="w-slider-mask-3">
+         <div aria-label="1 of 5" class="slide is-team w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div class="image-wrap u-absolute-full">
            <img alt="A man wearing an orange propeller hat and sunglasses, gesturing with his hands in front of large tropical palm leaves." height="1232" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" src="/assets/img/Frame 1618873057.webp" srcset="/assets/img/Frame 1618873057-p-500.webp 500w, /assets/img/Frame 1618873057-p-800.webp 800w, /assets/img/Frame 1618873057.webp 900w" width="900"/>
           </div>
@@ -4344,7 +4347,7 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-hidden="true" aria-label="2 of 5" class="slide is-team w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div aria-hidden="true" aria-label="2 of 5" class="slide is-team w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div aria-hidden="true" class="image-wrap u-absolute-full">
            <img alt="A smiling woman with long dark hair and facial piercings, holding her hand out toward the camera in a tropical setting." aria-hidden="true" height="1232" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" src="/assets/img/FOYWWNMfi7U46sD9CUBWWApj0NToLyGR.webp" srcset="/assets/img/FOYWWNMfi7U46sD9CUBWWApj0NToLyGR-p-500.webp 500w, /assets/img/FOYWWNMfi7U46sD9CUBWWApj0NToLyGR-p-800.webp 800w, /assets/img/FOYWWNMfi7U46sD9CUBWWApj0NToLyGR.webp 900w" width="900"/>
           </div>
@@ -4388,7 +4391,7 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-hidden="true" aria-label="3 of 5" class="slide is-team w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div aria-hidden="true" aria-label="3 of 5" class="slide is-team w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div aria-hidden="true" class="image-wrap u-absolute-full">
            <img alt="A man with dark hair laughing heartily with his head tilted back, set against a blurred green foliage background." aria-hidden="true" height="1233" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" src="/assets/img/my2u5vmy2u5vmy2u.webp" srcset="/assets/img/my2u5vmy2u5vmy2u-p-500.webp 500w, /assets/img/my2u5vmy2u5vmy2u-p-800.webp 800w, /assets/img/my2u5vmy2u5vmy2u.webp 900w" width="900"/>
           </div>
@@ -4432,7 +4435,7 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-hidden="true" aria-label="4 of 5" class="slide is-team w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div aria-hidden="true" aria-label="4 of 5" class="slide is-team w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div aria-hidden="true" class="image-wrap u-absolute-full">
            <img alt="A man with short curly hair smiling warmly with his arms crossed, wearing a black t-shirt in front of palm trees." aria-hidden="true" height="1233" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" src="/assets/img/6bibjs6bibjs6bib 1.webp" srcset="/assets/img/6bibjs6bibjs6bib 1-p-500.webp 500w, /assets/img/6bibjs6bibjs6bib 1-p-800.webp 800w, /assets/img/6bibjs6bibjs6bib 1.webp 900w" width="900"/>
           </div>
@@ -4476,7 +4479,7 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-hidden="true" aria-label="5 of 5" class="slide is-team w-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
+         <div aria-hidden="true" aria-label="5 of 5" class="slide is-team w-slide swiper-slide" role="group" style="transition: all; transform: translateX(0px); opacity: 1;">
           <div aria-hidden="true" class="image-wrap u-absolute-full">
            <img alt='A woman with short blonde hair winking and making an "OK" hand gesture while smiling in a lush green outdoor environment.' aria-hidden="true" height="1200" loading="lazy" sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" src="/assets/img/ipbnx0ipbnx0ipbn 1.webp" srcset="/assets/img/ipbnx0ipbnx0ipbn 1-p-500.webp 500w, /assets/img/ipbnx0ipbnx0ipbn 1-p-800.webp 800w, /assets/img/ipbnx0ipbnx0ipbn 1.webp 900w" width="900"/>
           </div>
@@ -4520,10 +4523,10 @@ import '../styles/main.css';
            </div>
           </div>
          </div>
-         <div aria-atomic="true" aria-live="off" class="w-slider-aria-label" data-wf-ignore="">
+         <div aria-atomic="true" aria-live="off" class="w-slider-aria-label swiper" data-wf-ignore="">
          </div>
         </div>
-        <div aria-controls="w-slider-mask-3" aria-label="previous slide" class="left-arrow u-absolute-top-right is-offset w-slider-arrow-left" role="button" tabindex="0">
+        <div aria-controls="w-slider-mask-3" aria-label="previous slide" class="left-arrow u-absolute-top-right is-offset w-slider-arrow-left swiper" role="button" tabindex="0">
          <div class="arrow-icon w-embed">
           <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
            <path d="m6 9 6 6 6-6">
@@ -4531,7 +4534,7 @@ import '../styles/main.css';
           </svg>
          </div>
         </div>
-        <div aria-controls="w-slider-mask-3" aria-label="next slide" class="right-arrow u-absolute-top-right is-offset w-slider-arrow-right" role="button" tabindex="0">
+        <div aria-controls="w-slider-mask-3" aria-label="next slide" class="right-arrow u-absolute-top-right is-offset w-slider-arrow-right swiper" role="button" tabindex="0">
          <div class="arrow-icon w-embed">
           <svg class="lucide lucide-chevron-down-icon lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
            <path d="m6 9 6 6 6-6">
@@ -4539,16 +4542,16 @@ import '../styles/main.css';
           </svg>
          </div>
         </div>
-        <div class="slide-nav is-hidden w-slider-nav">
-         <div aria-label="Show slide 1 of 5" aria-pressed="true" class="w-slider-dot w-active" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
+        <div class="slide-nav is-hidden w-slider-nav swiper">
+         <div aria-label="Show slide 1 of 5" aria-pressed="true" class="w-slider-dot w-active swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="0">
          </div>
-         <div aria-label="Show slide 2 of 5" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+         <div aria-label="Show slide 2 of 5" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
          </div>
-         <div aria-label="Show slide 3 of 5" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+         <div aria-label="Show slide 3 of 5" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
          </div>
-         <div aria-label="Show slide 4 of 5" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+         <div aria-label="Show slide 4 of 5" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
          </div>
-         <div aria-label="Show slide 5 of 5" aria-pressed="false" class="w-slider-dot" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
+         <div aria-label="Show slide 5 of 5" aria-pressed="false" class="w-slider-dot swiper" data-wf-ignore="" role="button" style="margin-left: 3px; margin-right: 3px;" tabindex="-1">
          </div>
         </div>
        </div>
@@ -4843,7 +4846,7 @@ import '../styles/main.css';
   <div class="navbar-inner-wrap">
    <div class="navbar-brand-wrap">
     <a aria-current="page" aria-label="home" class="brand-link w-variant-998d0b6a-a741-b52e-bbc7-76c0cc034424 w-nav-brand w--current" data-w-id="af0e36b7-6695-3028-08ed-146d0a2c07a4" href="/">
-     <img alt="Surf Haven logo" height="110" loading="eager" src="/assets/img/logo-light.png" width="500"/>
+     <img alt="Surf Haven logo" height="110" loading="eager" src="/assets/img/logo/surf-haven/logo_white.png" width="500"/>
     </a>
     <div class="dates w-variant-998d0b6a-a741-b52e-bbc7-76c0cc034424">
      18 May – 26 May
@@ -4971,7 +4974,7 @@ import '../styles/main.css';
      <div class="footer-header" id="w-node-f644f11b-e52f-04c1-6275-c38e5c9b3c20-5c9b3c1b">
       <div class="footer-main-col">
        <a aria-current="page" class="footer-brand-link w-nav-brand w--current" href="/">
-        <img alt="Surf Haven logo" height="110" loading="lazy" src="/assets/img/logo-light.png" width="500"/>
+        <img alt="Surf Haven logo" height="110" loading="lazy" src="/assets/img/logo/surf-haven/logo_white.png" width="500"/>
        </a>
        <div class="u-text-color-frost">
         Surf Haven Surf Camp
@@ -5306,6 +5309,9 @@ import '../styles/main.css';
 
 
   <!-- Swiper JS -->
+  <script is:inline src="/scripts/gsap.min.js"></script>
+  <script is:inline src="/scripts/ScrollTrigger.min.js"></script>
+  <script is:inline src="/scripts/SplitText.min.js"></script>
   <script is:inline src="/scripts/swiper-bundle.min.js"></script>
   <script is:inline src="/scripts/surf-haven.js"></script>
 </body>

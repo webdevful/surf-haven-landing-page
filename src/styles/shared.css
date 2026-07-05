@@ -7,5 +7,14 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 /* Brand repair: 9-letter 'surfhaven' watermark fits the 6-letter track. */
 .big-letter{font-size:16.6vw !important}
 
-/* Navbar scroll-invert repair: white logo at top, inverted on the scrolled bar. */
-.navbar.is-scrolled .brand-link img{filter:invert(1)}
+
+/* Webflow slider/dropdown base mechanics (absent from the site export). */
+.w-dropdown{position:relative}
+.w-dropdown-list{display:none}
+.w-dropdown-list.w--open{display:block;position:absolute;min-width:100%;z-index:900}
+.pricing-dropdown-content.w--open{position:static}
+/* Video lightbox */
+.wdf-lightbox{position:fixed;inset:0;z-index:9999;background:rgba(15,41,22,.92);display:flex;align-items:center;justify-content:center;padding:4vmin}
+.wdf-lightbox-inner{position:relative;width:min(1100px,92vw)}
+.wdf-lightbox-inner video{width:100%;border-radius:1.375rem;display:block}
+.wdf-lightbox-close{position:absolute;top:-2.6rem;right:0;background:none;border:0;color:#fff;font-size:2.2rem;cursor:pointer;line-height:1}
