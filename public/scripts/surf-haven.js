@@ -23,8 +23,7 @@
     const accordions = qsa('.day-accordion');
     if (!accordions.length) return;
 
-    // Open first accordion by default
-    openDayAccordion(accordions[0]);
+    // Source fidelity: all days start collapsed (First Article return, class 5).
 
     accordions.forEach(function (acc) {
       const header = qs('.day-accordion-header', acc);
@@ -108,8 +107,8 @@
     const rooms = qsa('.room-accordion');
     if (!rooms.length) return;
 
-    // Open first room by default
-    openRoomAccordion(rooms[0]);
+    // Source fidelity: 'Common Areas' (last item) opens by default.
+    openRoomAccordion(rooms[rooms.length - 1]);
 
     rooms.forEach(function (room) {
       const header = qs('.room-accordion-header', room);
@@ -270,18 +269,39 @@
    * 8. INTERSECTION OBSERVER – fade-in content visibility
    * ──────────────────────────────────────────────────────────────── */
   function initReveal() {
-    if (!('IntersectionObserver' in window)) return;
-    const items = qsa('[data-animate], .animate-reveal');
+    // The captured source markup froze GSAP mid-animation: inline opacity<1
+    // and translate()/translate3d offsets with no runtime to complete them
+    // (First Article return, defect class 2). Find every frozen element and
+    // finish the animation with a lightweight fade/slide-in.
+    const frozen = qsa('[style*="opacity"]').filter(function (el) {
+      const o = parseFloat(el.style.opacity);
+      return !isNaN(o) && o < 1;
+    });
+    const shifted = qsa('[style*="transform"]').filter(function (el) {
+      return /translate\(\s*-?\d/.test(el.style.transform || '');
+    });
+    const items = Array.from(new Set(frozen.concat(shifted)));
     if (!items.length) return;
+    items.forEach(function (el) { el.classList.add('wdf-frozen'); });
+
+    function reveal(el) { el.classList.add('wdf-revealed'); }
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window)) {
+      items.forEach(reveal);
+      return;
+    }
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+          reveal(entry.target);
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
     items.forEach(function (el) { io.observe(el); });
+    // Safety net: nothing stays invisible even if the observer misfires.
+    window.setTimeout(function () { items.forEach(reveal); }, 3000);
   }
 
   /* ─────────────────────────────────────────────────────────────────
