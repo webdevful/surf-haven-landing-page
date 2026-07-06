@@ -27,3 +27,40 @@
   required), 1366x720, 17s; inline muted preview + click-to-play lightbox.
 - **Photography**: source-template imagery retained pending the owner's
   provenance decision (flagged in the open repair order).
+
+## Licensed provider media (2026-07-06 — replaced all source-template photos)
+
+Fetched via `tools/fetch_media.py` from the approved provider APIs. All licenses are commercial-use, no attribution required; author credited voluntarily.
+
+| File | Provider | ID | Author | License |
+|---|---|---|---|---|
+| 4487 1.webp | pexels | 3042160 | Caio | Pexels License |
+| 5010 1.webp | pexels | 4330047 | ArtHouse Studio | Pexels License |
+| 6bibjs6bibjs6bib 1.webp | pexels | 34144089 | Jibin Yesudasan | Pexels License |
+| FOYWWNMfi7U46sD9CUBWWApj0NToLyGR.webp | pexels | 11288249 | Emmanuel Edel | Pexels License |
+| Frame 1618873057.webp | pexels | 28936285 | Allan Carvalho | Pexels License |
+| aerial-surfers.avif | unsplash | gvephxIoMYg | Jaanus Jagomägi | Unsplash License |
+| check.webp | pexels | 13154075 | Lany-Jade Mondou | Pexels License |
+| cover - common areas.webp | unsplash | xtFFdRfyK4I | Alef Morais | Unsplash License |
+| cover - double room.webp | unsplash | 8ccOqbNdp1A | mahmoud azmy | Unsplash License |
+| cover - group suit.webp | unsplash | 4_jQL4JCS98 | Collov Home Design | Unsplash License |
+| cover - twin room.webp | unsplash | BZILE9ZE70I | Grant Durr | Unsplash License |
+| dj-outdoor.avif | pexels | 15919393 | Summer | Pexels License |
+| footer.webp | pexels | 32069033 | Farhad Irani | Pexels License |
+| friends-cocktails.avif | pexels | 34902495 | Sergei Starostin | Pexels License |
+| friends-playing-water.avif | pexels | 5468298 | Manuel Moreno | Pexels License |
+| ipbnx0ipbnx0ipbn 1.webp | pexels | 3974017 | EVG Kowalievska | Pexels License |
+| jungle-temple-mist.avif | unsplash | Gn9tDhLksYs | visualsofdana | Unsplash License |
+| my2u5vmy2u5vmy2u.webp | pexels | 20849281 | Kenneth Surillo | Pexels License |
+| outdoor-spa-forest.avif | pexels | 19329538 | Criativa Pix Fotografia | Pexels License |
+| scooter-surf-motion.webp | pexels | 19357859 | Bruno Brandao | Pexels License |
+| surf-coach-02.webp | pexels | 6299895 | Kampus Production | Pexels License |
+| surfers-circle.avif | pexels | 7659107 | Kampus Production | Pexels License |
+| surfers-palm-garden.avif | pexels | 14541400 | Gabriel Passos | Pexels License |
+| surfing-beach.avif | pexels | 11617732 | Atlantic Ambience | Pexels License |
+| team-portrait-thumb.webp | pexels | 6215759 | mododeolhar | Pexels License |
+| team-portrait.avif | pexels | 6215759 | mododeolhar | Pexels License |
+| tropical-leaf-macro.webp | unsplash | 6iFTzK0Op6Y | Oscar McGlone | Unsplash License |
+| villa-jungle.avif | unsplash | FRMKzS3t4u8 | Alexander Davies | Unsplash License |
+| villa.avif | unsplash | nyceoSzBZxk | Jusuf Bachtiar | Unsplash License |
+| waterfall-group.avif | unsplash | wPBbPkZZu8E | Aleksandra Dementeva | Unsplash License |
