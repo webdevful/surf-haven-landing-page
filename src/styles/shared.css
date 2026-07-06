@@ -53,3 +53,14 @@ a:hover > .arrow-tail-button,
   transform:scale(.94);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .popup-about.is-open .layout-popup, .popup-form.is-open .layout-popup{transform:scale(1)}
 .slide-popup{transition:opacity .3s ease}
+
+/* Button text-roll hover (source IX3 micro-interaction, reimplemented). */
+.button-text-wrap{overflow:hidden;position:relative}
+.button-text{position:relative;display:block;transition:transform .42s cubic-bezier(.19,1,.22,1);will-change:transform}
+.button-text-wrap::after{content:attr(data-label);position:absolute;left:0;top:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;white-space:nowrap;
+  transform:translateY(105%);transition:transform .42s cubic-bezier(.19,1,.22,1);pointer-events:none}
+.primary-button:hover .button-text,.secondary-button:hover .button-text,
+.primary-button:focus-visible .button-text,.secondary-button:focus-visible .button-text{transform:translateY(-105%)}
+.primary-button:hover .button-text-wrap::after,.secondary-button:hover .button-text-wrap::after,
+.primary-button:focus-visible .button-text-wrap::after,.secondary-button:focus-visible .button-text-wrap::after{transform:translateY(0)}

@@ -481,11 +481,43 @@
     });
   }
 
+  /* BUTTON TEXT-ROLL — on hover the label slides up and an identical copy
+   * rolls in from below (the source IX3 button micro-interaction). Primary
+   * buttons already ship .button-text-wrap > .button-text; secondary buttons
+   * carry a plain label div, so we wrap it into the same structure. The copy
+   * is drawn by CSS ::after content: attr(data-label). */
+  function initButtonRoll() {
+    // primary buttons: label already wrapped — just set the duplicate text
+    qsa('.button-text').forEach(function (el) {
+      var label = el.textContent.trim();
+      if (!el.getAttribute('data-label')) el.setAttribute('data-label', label);
+      var wrap = el.closest('.button-text-wrap');
+      if (wrap && !wrap.getAttribute('data-label')) wrap.setAttribute('data-label', label);
+    });
+    // secondary buttons: wrap the plain label div into the roll structure
+    qsa('.secondary-button').forEach(function (btn) {
+      var label = null;
+      Array.prototype.forEach.call(btn.children, function (c) {
+        if (c.tagName === 'DIV' && !c.classList.contains('arrow-tail-button') &&
+            !c.classList.contains('button-text-wrap')) label = label || c;
+      });
+      if (!label) return;
+      var txt = label.textContent.trim();
+      if (!txt) return;
+      var wrap = document.createElement('div'); wrap.className = 'button-text-wrap';
+      wrap.setAttribute('data-label', txt);
+      var inner = document.createElement('div'); inner.className = 'button-text';
+      inner.textContent = txt; inner.setAttribute('data-label', txt);
+      wrap.appendChild(inner);
+      label.replaceWith(wrap);
+    });
+  }
+
   function boot() {
     // Fault isolation: one broken module must never take the others down.
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
-     initSmoothScroll, initRoomGallery, initPopups].forEach(function (mod) {
+     initSmoothScroll, initRoomGallery, initPopups, initButtonRoll].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
