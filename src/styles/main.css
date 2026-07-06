@@ -5,3 +5,8 @@
 @media (hover:hover) and (pointer:fine){.levels-card:hover .levels-card-body,.levels-card:focus-within .levels-card-body{grid-template-rows:1fr}}
 .levels-card.is-open .levels-card-body{grid-template-rows:1fr}
 @media (prefers-reduced-motion:reduce){.levels-card-body{transition:none}}
+/* Levels badge — ports the source IX2 hover color change (frozen inline white removed). Default = bordered/transparent; on hover/open the badge fills with the accent. Scoped to .levels-card so other .badge instances are unaffected. */
+.levels-card .badge{transition:background-color .6s cubic-bezier(.23,1,.32,1),border-color .6s cubic-bezier(.23,1,.32,1)}
+@media (hover:hover) and (pointer:fine){.levels-card:hover .badge,.levels-card:focus-within .badge{background-color:var(--color--base--accent);border-color:var(--color--base--accent)}}
+.levels-card.is-open .badge{background-color:var(--color--base--accent);border-color:var(--color--base--accent)}
+@media (prefers-reduced-motion:reduce){.levels-card .badge{transition:none}}
