@@ -167,6 +167,13 @@
       });
       if (slides.length < 2) return;
 
+      // Force every slide image to load/decode NOW so no slide is ever blank
+      // until the user interacts (the "image appears on hover" symptom).
+      qsa('img', mask).forEach(function (im) {
+        im.loading = 'eager';
+        if (im.decode) { try { im.decode().catch(function(){}); } catch (e) {} }
+      });
+
       var duration = parseInt(slider.getAttribute('data-duration') || '500', 10);
       var easing = slider.getAttribute('data-easing') || 'ease';
       var autoplay = slider.getAttribute('data-autoplay') === 'true';
@@ -365,11 +372,16 @@
 
   /* Full-page scroll reveals on the clean DOM (GSAP + ScrollTrigger). */
   function initReveal() {
+    // ADDITIVE reveal: content is visible by default (CSS never hides it).
+    // The animation only nudges elements up from a small offset — it never
+    // sets opacity 0. So if GSAP/ScrollTrigger never loads or a trigger
+    // misfires, EVERYTHING is still visible. No "blank until hover/scroll".
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || typeof gsap === 'undefined') return;
+    if (reduced || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
-    // Split-line headings rise out of their authored masks.
+    // Split-line headings: the authored masks clip the lines; slide them up.
+    // opacity stays 1 throughout (the mask does the reveal, not opacity).
     var seen = new Set();
     qsa('.gsap_split_line-mask').forEach(function (mask) {
       var heading = mask.closest('h1,h2,h3,.heading-h1,.heading-h2') || mask.parentElement;
@@ -377,45 +389,29 @@
       seen.add(heading);
       var lines = qsa('.gsap_split_line', heading);
       if (!lines.length) return;
-      gsap.set(lines, { yPercent: 105 });
-      gsap.to(lines, {
-        yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.12,
-        scrollTrigger: { trigger: heading, start: 'top 88%', once: true }
+      gsap.fromTo(lines, { yPercent: 110 }, {
+        yPercent: 0, duration: 1.0, ease: 'power4.out', stagger: 0.1,
+        scrollTrigger: { trigger: heading, start: 'top 90%', once: true }
       });
     });
 
-    // Section content fades/rises in — every section, uniformly.
+    // Section content: subtle upward drift only. NEVER opacity 0 — start at a
+    // small y offset and full opacity is untouched, so nothing can go missing.
     qsa('section').forEach(function (section) {
       var items = qsa(
         '.icon-eyebrow-group, .eyebrow-group, p, .primary-button, ' +
-        '.secondary-button, .pricing-card, .card, .badge, .video-cta, ' +
-        '.image-wrap, .contact-row',
+        '.secondary-button, .pricing-card, .badge, .video-cta, .contact-row',
         section
       ).filter(function (el) {
-        // Sliders and accordions own their internals — the reveal system
-        // must never set initial states inside them (that is exactly how
-        // carousels break invisibly).
         return !el.closest('.w-slider, .day-accordion, .room-accordion, ' +
-                           '.w-dropdown, .gsap_split_line, footer');
-      }).slice(0, 24);
+                           '.w-dropdown, .gsap_split_line, footer, .image-wrap');
+      }).slice(0, 20);
       if (!items.length) return;
-      gsap.set(items, { autoAlpha: 0, y: 28 });
-      gsap.to(items, {
-        autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.06,
-        scrollTrigger: { trigger: section, start: 'top 82%', once: true }
+      gsap.fromTo(items, { y: 24 }, {
+        y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.05,
+        scrollTrigger: { trigger: section, start: 'top 85%', once: true }
       });
     });
-
-    // Nothing may stay invisible under any failure mode.
-    window.setTimeout(function () {
-      qsa('section *').forEach(function (el) {
-        var cs = getComputedStyle(el);
-        if (parseFloat(cs.opacity) < 0.05 && el.getClientRects().length) {
-          el.style.setProperty('opacity', '1', 'important');
-          el.style.setProperty('transform', 'none', 'important');
-        }
-      });
-    }, 6000);
   }
 
   function boot() {
