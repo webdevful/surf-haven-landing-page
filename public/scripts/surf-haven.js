@@ -432,14 +432,20 @@
       document.body.style.overflow = '';
       window.setTimeout(function () { pop.style.display = 'none'; }, 350);
     }
-    // Read Our Story -> #popup-about
-    qsa('a[aria-label*="about popup" i], a[aria-label*="Read our story" i]').forEach(function (b) {
-      b.addEventListener('click', function (e) { e.preventDefault(); openOverlay(document.getElementById('popup-about')); });
-    });
-    // Apply Now -> the form popup
+    // Data-driven trigger mapping. The aria-label (preserved by the crawler)
+    // encodes intent: "open about popup" -> about; apply/join/reserve/form ->
+    // application form. Verified against the source. This covers EVERY CTA
+    // arrow button, not a hardcoded few.
+    var aboutPop = document.getElementById('popup-about');
     var formPop = qs('.popup-form');
-    qsa('a[aria-label*="application form" i], a[aria-label*="Apply now" i]').forEach(function (b) {
-      b.addEventListener('click', function (e) { e.preventDefault(); openOverlay(formPop); });
+    var ABOUT = /about popup|read our story/i;
+    var FORM = /application form|apply now|join the camp|reserve your spot|apply\b/i;
+    qsa('a[href="#"][aria-label], a.secondary-button[href="#"], a.primary-button[href="#"]').forEach(function (b) {
+      var aria = (b.getAttribute('aria-label') || b.textContent || '').trim();
+      var target = ABOUT.test(aria) ? aboutPop : FORM.test(aria) ? formPop : null;
+      if (!target) return;
+      b.addEventListener('click', function (e) { e.preventDefault(); openOverlay(target); });
+      b.setAttribute('data-popup-wired', target === aboutPop ? 'about' : 'form');
     });
     // close buttons + backdrop + Esc
     qsa('.close-button').forEach(function (c) {

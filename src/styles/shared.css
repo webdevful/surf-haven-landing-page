@@ -37,7 +37,10 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 
 /* Arrow-tail button: brand-green fill + lift on hover (source IX3 behavior). */
 .arrow-tail-button{transition:background-color .3s ease, transform .3s ease}
+/* arrow hover brand (all button families) */
 .secondary-button:hover .arrow-tail-button,
+.tertiary-button:hover .arrow-tail-button,
+a:hover > .arrow-tail-button,
 .secondary-button:focus-visible .arrow-tail-button{
   background-color:var(--color--base--accent);
   transform:translate(2px,-2px);
