@@ -1,29 +1,24 @@
-/*!
- * Surf Haven – Interactive JS
- * Handles: Day program accordion + tabs, Room accordion + gallery, Apply overlay, Navbar scroll, Swiper sliders
+/* Surf Haven page runtime — v4 (root rebuild on the clean authored DOM)
+ * Explicit, testable implementation of the source's observed behaviors with
+ * the registered tech stack (Swiper 11 + GSAP 3 + vanilla JS):
+ *  - full-page scroll reveals (clean DOM: initial states are OURS, so every
+ *    section animates — nothing can ship frozen)
+ *  - navbar scroll-invert with the exact color values measured on the source
+ *  - 4 authored sliders on Swiper; dropdowns; day tabs/accordions; room
+ *    gallery; apply overlay; video lightbox; WLFS logo invert on scroll
  */
 (function () {
   'use strict';
 
-  /* ─────────────────────────────────────────────────────────────────
-   * UTILITY
-   * ──────────────────────────────────────────────────────────────── */
-  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
-  function qsa(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
+  function qs(sel, root) { return (root || document).querySelector(sel); }
+  function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * 1. DAY ACCORDION (Program section – 7 days)
-   * Each .day-accordion has:
-   *   .day-accordion-header  – click trigger
-   *   .day-accordion-body    – collapsible pane  (display:block/overflow:hidden)
-   *   .chevron-button        – rotates 180° when open
-   *   .day-tabs-parent       – tab host inside the body
-   * ──────────────────────────────────────────────────────────────── */
   function initDayAccordion() {
     const accordions = qsa('.day-accordion');
     if (!accordions.length) return;
 
-    // Source fidelity: all days start collapsed (First Article return, class 5).
+    // Clean DOM ships bodies expanded; source fidelity = all days collapsed.
+    accordions.forEach(closeDayAccordion);
 
     accordions.forEach(function (acc) {
       const header = qs('.day-accordion-header', acc);
@@ -38,36 +33,6 @@
     });
   }
 
-  function openDayAccordion(acc) {
-    const body = qs('.day-accordion-body', acc);
-    const chevron = qs('.chevron-button', acc);
-    if (!body) return;
-    acc.classList.add('is-active');
-    if (chevron) chevron.classList.add('is-active');
-    body.style.height = body.scrollHeight + 'px';
-    // After transition, set to auto so inner content (tabs switching) works
-    body.addEventListener('transitionend', function onEnd() {
-      if (acc.classList.contains('is-active')) body.style.height = 'auto';
-      body.removeEventListener('transitionend', onEnd);
-    });
-  }
-
-  function closeDayAccordion(acc) {
-    const body = qs('.day-accordion-body', acc);
-    const chevron = qs('.chevron-button', acc);
-    if (!body) return;
-    // Fix height before animating to 0
-    body.style.height = body.offsetHeight + 'px';
-    requestAnimationFrame(function () {
-      body.style.height = '0px';
-    });
-    acc.classList.remove('is-active');
-    if (chevron) chevron.classList.remove('is-active');
-  }
-
-  /* ─────────────────────────────────────────────────────────────────
-   * 2. DAY TABS (Description / Timetable)
-   * ──────────────────────────────────────────────────────────────── */
   function initDayTabs() {
     const tabParents = qsa('.day-tabs-parent');
     tabParents.forEach(function (parent) {
@@ -100,14 +65,12 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * 3. ROOM ACCORDION (Stay section)
-   * ──────────────────────────────────────────────────────────────── */
   function initRoomAccordion() {
     const rooms = qsa('.room-accordion');
     if (!rooms.length) return;
 
-    // Source fidelity: 'Common Areas' (last item) opens by default.
+    // Source fidelity: only 'Common Areas' (last item) starts open.
+    rooms.forEach(closeRoomAccordion);
     openRoomAccordion(rooms[rooms.length - 1]);
 
     rooms.forEach(function (room) {
@@ -121,32 +84,6 @@
     });
   }
 
-  function openRoomAccordion(room) {
-    const body = qs('.room-accordion-body', room);
-    const chevron = qs('.chevron-button', room);
-    if (!body) return;
-    room.classList.add('is-active');
-    body.classList.add('is-active');
-    if (chevron) chevron.classList.add('is-active');
-    // Grid row height animation (0fr → 1fr handled by CSS; also need opacity)
-    body.style.opacity = '1';
-    body.style.gridTemplateRows = '1fr';
-  }
-
-  function closeRoomAccordion(room) {
-    const body = qs('.room-accordion-body', room);
-    const chevron = qs('.chevron-button', room);
-    if (!body) return;
-    room.classList.remove('is-active');
-    body.classList.remove('is-active');
-    if (chevron) chevron.classList.remove('is-active');
-    body.style.opacity = '0';
-    body.style.gridTemplateRows = '0fr';
-  }
-
-  /* ─────────────────────────────────────────────────────────────────
-   * 4. ROOM GALLERY (Swiper within room accordion)
-   * ──────────────────────────────────────────────────────────────── */
   function initRoomGallery() {
     // Room gallery swipers are initialized after Swiper lib loads
     if (typeof Swiper === 'undefined') return;
@@ -167,9 +104,6 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * 5. APPLY / CTA OVERLAY
-   * ──────────────────────────────────────────────────────────────── */
   function initOverlay() {
     const overlays = qsa('[data-overlay]');
     const openers = qsa('[data-open-overlay]');
@@ -218,105 +152,6 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * 6. NAVBAR SCROLL BEHAVIOR
-   * ──────────────────────────────────────────────────────────────── */
-  function initNavbar() {
-    const navbar = qs('.navbar');
-    if (!navbar) return;
-    let lastScroll = 0;
-    window.addEventListener('scroll', function () {
-      const current = window.scrollY;
-      if (current > 60) {
-        navbar.classList.add('is-scrolled');
-      } else {
-        navbar.classList.remove('is-scrolled');
-      }
-      lastScroll = current;
-    }, { passive: true });
-
-    // Mobile menu toggle
-    const burger = qs('.w-nav-button');
-    const menu = qs('.w-nav-menu');
-    if (burger && menu) {
-      burger.addEventListener('click', function () {
-        const isOpen = burger.classList.toggle('w--open');
-        menu.classList.toggle('w--open', isOpen);
-        burger.setAttribute('aria-expanded', isOpen);
-      });
-    }
-  }
-
-  /* ─────────────────────────────────────────────────────────────────
-   * 7. HERO SWIPER
-   * ──────────────────────────────────────────────────────────────── */
-
-  /* ─────────────────────────────────────────────────────────────────
-   * 8. INTERSECTION OBSERVER – fade-in content visibility
-   * ──────────────────────────────────────────────────────────────── */
-  function initReveal() {
-    // Owner return pass 2: reproduce the SOURCE runtime (GSAP 3.15 +
-    // ScrollTrigger + SplitText are vendored locally, same versions the
-    // Webflow source loads). The captured markup already carries the
-    // .gsap_split_line masks — animate them the way the source does.
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var frozen = qsa('[style*="opacity"]').filter(function (el) {
-      var o = parseFloat(el.style.opacity);
-      return !isNaN(o) && o < 1;
-    });
-    var shifted = qsa('[style*="transform"]').filter(function (el) {
-      return /translate\(\s*-?\d/.test(el.style.transform || '');
-    });
-
-    if (reduced || typeof gsap === 'undefined') {
-      frozen.concat(shifted).forEach(function (el) { el.classList.add('wdf-frozen', 'wdf-revealed'); });
-      return;
-    }
-    gsap.registerPlugin(ScrollTrigger);
-
-    // 1. Split-line headings: lines rise out of their overflow masks.
-    var seen = new Set();
-    qsa('.gsap_split_line-mask').forEach(function (mask) {
-      var heading = mask.closest('h1,h2,h3,.heading-h1,.heading-h2') || mask.parentElement;
-      if (seen.has(heading)) return;
-      seen.add(heading);
-      var lines = Array.prototype.slice.call(heading.querySelectorAll('.gsap_split_line'));
-      if (!lines.length) return;
-      gsap.set(lines, { yPercent: 105, opacity: 1 });
-      gsap.to(lines, {
-        yPercent: 0,
-        duration: 1.1,
-        ease: 'power4.out',
-        stagger: 0.12,
-        scrollTrigger: { trigger: heading, start: 'top 88%', once: true },
-        onComplete: function () { lines.forEach(function (l) { l.classList.add('wdf-revealed'); }); }
-      });
-    });
-
-    // 2. Everything else frozen mid-animation: fade/slide to rest.
-    var rest = frozen.concat(shifted).filter(function (el) {
-      return !el.closest('.gsap_split_line') && !el.classList.contains('gsap_split_line') &&
-             !el.classList.contains('w-dropdown-list');
-    });
-    Array.from(new Set(rest)).forEach(function (el) {
-      gsap.to(el, {
-        autoAlpha: 1, x: 0, y: 0,
-        duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
-        onComplete: function () { el.classList.add('wdf-revealed'); }
-      });
-    });
-
-    // Safety net: nothing stays invisible even if a trigger misfires.
-    window.setTimeout(function () {
-      frozen.concat(shifted).forEach(function (el) { el.classList.add('wdf-frozen', 'wdf-revealed'); });
-      qsa('.gsap_split_line').forEach(function (l) { l.classList.add('wdf-frozen', 'wdf-revealed'); });
-    }, 4000);
-  }
-
-  /* ─────────────────────────────────────────────────────────────────
-   * WEBFLOW SLIDERS – arrows, autoplay, infinite (source behavior)
-   * ──────────────────────────────────────────────────────────────── */
   function initWebflowSliders() {
     // Port the source's Webflow sliders onto the registered tech stack
     // (Swiper 11, vendored locally): remap w-slider markup to Swiper DOM at
@@ -349,9 +184,6 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * DROPDOWNS – nav menus (hover+click) and collapsibles (source behavior)
-   * ──────────────────────────────────────────────────────────────── */
   function initDropdowns() {
     qsa('.w-dropdown').forEach(function (dd) {
       var toggle = qs('.w-dropdown-toggle', dd);
@@ -381,9 +213,6 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * VIDEO LIGHTBOX – "Watch our video diaries!" plays a real local video
-   * ──────────────────────────────────────────────────────────────── */
   function initVideoLightbox() {
     var link = qs('[data-video]');
     if (!link) return;
@@ -411,22 +240,6 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * WLFS LOGO SWAP – white lockup on dark hero, dark lockup on scrolled bar
-   * ──────────────────────────────────────────────────────────────── */
-  function initLogoSwap() {
-    var img = qs('.brand-link img');
-    if (!img) return;
-    var white = '/assets/img/logo/surf-haven/logo_white.png';
-    var dark = '/assets/img/logo/surf-haven/logo.png';
-    window.addEventListener('scroll', function () {
-      img.src = window.scrollY > 60 ? dark : white;
-    }, { passive: true });
-  }
-
-  /* ─────────────────────────────────────────────────────────────────
-   * 9. SMOOTH ANCHOR SCROLL
-   * ──────────────────────────────────────────────────────────────── */
   function initSmoothScroll() {
     qsa('a[href^="#"]').forEach(function (a) {
       a.addEventListener('click', function (e) {
@@ -440,31 +253,140 @@
     });
   }
 
-  /* ─────────────────────────────────────────────────────────────────
-   * BOOT
-   * ──────────────────────────────────────────────────────────────── */
-  function boot() {
-    initNavbar();
-    initDayAccordion();
-    initDayTabs();
-    initRoomAccordion();
-    initOverlay();
-    initReveal();
-    initWebflowSliders();
-    initDropdowns();
-    initVideoLightbox();
-    initLogoSwap();
-    initSmoothScroll();
-    // Swiper – waits for the CDN script
-    if (typeof Swiper !== 'undefined') {
-      initRoomGallery();
-    } else {
-      document.addEventListener('swiper-ready', function () {
-        initRoomGallery();
+  function closeDayAccordion(acc) {
+    const body = qs('.day-accordion-body', acc);
+    const chevron = qs('.chevron-button', acc);
+    if (!body) return;
+    // Fix height before animating to 0
+    body.style.height = body.offsetHeight + 'px';
+    requestAnimationFrame(function () {
+      body.style.height = '0px';
+    });
+    acc.classList.remove('is-active');
+    if (chevron) chevron.classList.remove('is-active');
+  }
+
+  function closeRoomAccordion(room) {
+    const body = qs('.room-accordion-body', room);
+    const chevron = qs('.chevron-button', room);
+    if (!body) return;
+    room.classList.remove('is-active');
+    body.classList.remove('is-active');
+    if (chevron) chevron.classList.remove('is-active');
+    body.style.opacity = '0';
+    body.style.gridTemplateRows = '0fr';
+  }
+
+  function openDayAccordion(acc) {
+    const body = qs('.day-accordion-body', acc);
+    const chevron = qs('.chevron-button', acc);
+    if (!body) return;
+    acc.classList.add('is-active');
+    if (chevron) chevron.classList.add('is-active');
+    // Queue after any pending close-all rAF so open always wins the frame.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { body.style.height = body.scrollHeight + 'px'; });
+    });
+    // After transition, set to auto so inner content (tabs switching) works
+    body.addEventListener('transitionend', function onEnd() {
+      if (acc.classList.contains('is-active')) body.style.height = 'auto';
+      body.removeEventListener('transitionend', onEnd);
+    });
+  }
+
+  function openRoomAccordion(room) {
+    const body = qs('.room-accordion-body', room);
+    const chevron = qs('.chevron-button', room);
+    if (!body) return;
+    room.classList.add('is-active');
+    body.classList.add('is-active');
+    if (chevron) chevron.classList.add('is-active');
+    // Grid row height animation (0fr → 1fr handled by CSS; also need opacity)
+    body.style.opacity = '1';
+    body.style.gridTemplateRows = '1fr';
+  }
+
+  /* Navbar scroll-invert — exact values measured on the live source. */
+  function initNavbar() {
+    var nav = qs('.navbar');
+    if (!nav) return;
+    var brandImg = qs('.brand-link img');
+    function apply(scrolled) {
+      nav.classList.toggle('is-scrolled', scrolled);
+      if (brandImg) brandImg.style.filter = scrolled ? 'invert(0.997)' : '';
+    }
+    window.addEventListener('scroll', function () { apply(window.scrollY > 60); }, { passive: true });
+    apply(window.scrollY > 60);
+
+    var burger = qs('.w-nav-button');
+    var menu = qs('.w-nav-menu');
+    if (burger && menu) {
+      burger.addEventListener('click', function () {
+        var isOpen = burger.classList.toggle('w--open');
+        menu.classList.toggle('w--open', isOpen);
+        burger.setAttribute('aria-expanded', isOpen);
       });
     }
   }
 
+  /* Full-page scroll reveals on the clean DOM (GSAP + ScrollTrigger). */
+  function initReveal() {
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Split-line headings rise out of their authored masks.
+    var seen = new Set();
+    qsa('.gsap_split_line-mask').forEach(function (mask) {
+      var heading = mask.closest('h1,h2,h3,.heading-h1,.heading-h2') || mask.parentElement;
+      if (seen.has(heading)) return;
+      seen.add(heading);
+      var lines = qsa('.gsap_split_line', heading);
+      if (!lines.length) return;
+      gsap.set(lines, { yPercent: 105 });
+      gsap.to(lines, {
+        yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.12,
+        scrollTrigger: { trigger: heading, start: 'top 88%', once: true }
+      });
+    });
+
+    // Section content fades/rises in — every section, uniformly.
+    qsa('section').forEach(function (section) {
+      var items = qsa(
+        '.card, .w-slide, .day-accordion, .room-accordion, .pricing-card, ' +
+        '.eyebrow-group, .icon-eyebrow-group, p, .primary-button, .secondary-button',
+        section
+      ).filter(function (el) { return !el.closest('.gsap_split_line'); }).slice(0, 24);
+      if (!items.length) return;
+      gsap.set(items, { autoAlpha: 0, y: 28 });
+      gsap.to(items, {
+        autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.06,
+        scrollTrigger: { trigger: section, start: 'top 82%', once: true }
+      });
+    });
+
+    // Nothing may stay invisible under any failure mode.
+    window.setTimeout(function () {
+      qsa('section *').forEach(function (el) {
+        var cs = getComputedStyle(el);
+        if (parseFloat(cs.opacity) < 0.05 && el.getClientRects().length) {
+          el.style.setProperty('opacity', '1', 'important');
+          el.style.setProperty('transform', 'none', 'important');
+        }
+      });
+    }, 6000);
+  }
+
+  function boot() {
+    // Fault isolation: one broken module must never take the others down.
+    [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
+     initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
+     initSmoothScroll, initRoomGallery].forEach(function (mod) {
+      try { mod(); } catch (err) {
+        console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
+      }
+    });
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {

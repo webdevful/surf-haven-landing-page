@@ -18,3 +18,9 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 .wdf-lightbox-inner{position:relative;width:min(1100px,92vw)}
 .wdf-lightbox-inner video{width:100%;border-radius:1.375rem;display:block}
 .wdf-lightbox-close{position:absolute;top:-2.6rem;right:0;background:none;border:0;color:#fff;font-size:2.2rem;cursor:pointer;line-height:1}
+
+/* Navbar scroll-invert (exact values measured on the live source). */
+.navbar{transition:background-color .35s ease,border-color .35s ease}
+.navbar.is-scrolled{background-color:rgba(247,247,247,.997);border-bottom:1px solid rgba(33,33,33,.2)}
+.navbar.is-scrolled .navbar-link,.navbar.is-scrolled .w-dropdown-toggle,.navbar.is-scrolled .dates{color:#212121}
+.navbar.is-scrolled .w-dropdown-list{background-color:#f6f6f6}
