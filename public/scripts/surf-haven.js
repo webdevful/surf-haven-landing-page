@@ -390,7 +390,7 @@
       var lines = qsa('.gsap_split_line', heading);
       if (!lines.length) return;
       gsap.fromTo(lines, { yPercent: 110 }, {
-        yPercent: 0, duration: 1.0, ease: 'power4.out', stagger: 0.1,
+        yPercent: 0, duration: 1.25, ease: 'power4.out', stagger: 0.12,
         scrollTrigger: { trigger: heading, start: 'top 90%', once: true }
       });
     });
@@ -407,9 +407,70 @@
                            '.w-dropdown, .gsap_split_line, footer, .image-wrap');
       }).slice(0, 20);
       if (!items.length) return;
-      gsap.fromTo(items, { y: 24 }, {
-        y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.05,
+      gsap.fromTo(items, { y: 34 }, {
+        y: 0, duration: 1.0, ease: 'power3.out', stagger: 0.07,
         scrollTrigger: { trigger: section, start: 'top 85%', once: true }
+      });
+    });
+  }
+
+  /* POPUPS — Read Our Story (about), Apply Now (form), slider "+" (slide
+   * detail). Markup ships hidden (display:none); IX3 opened them on the
+   * source. Reimplemented natively with fade/scale + backdrop + Esc close. */
+  function initPopups() {
+    function openOverlay(pop) {
+      if (!pop) return;
+      pop.style.display = 'flex';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { pop.classList.add('is-open'); });
+      });
+      document.body.style.overflow = 'hidden';
+    }
+    function closeOverlay(pop) {
+      if (!pop) return;
+      pop.classList.remove('is-open');
+      document.body.style.overflow = '';
+      window.setTimeout(function () { pop.style.display = 'none'; }, 350);
+    }
+    // Read Our Story -> #popup-about
+    qsa('a[aria-label*="about popup" i], a[aria-label*="Read our story" i]').forEach(function (b) {
+      b.addEventListener('click', function (e) { e.preventDefault(); openOverlay(document.getElementById('popup-about')); });
+    });
+    // Apply Now -> the form popup
+    var formPop = qs('.popup-form');
+    qsa('a[aria-label*="application form" i], a[aria-label*="Apply now" i]').forEach(function (b) {
+      b.addEventListener('click', function (e) { e.preventDefault(); openOverlay(formPop); });
+    });
+    // close buttons + backdrop + Esc
+    qsa('.close-button').forEach(function (c) {
+      c.addEventListener('click', function () { closeOverlay(c.closest('.popup-about, .popup-form')); });
+    });
+    qsa('.popup-about, .popup-form').forEach(function (pop) {
+      pop.addEventListener('click', function (e) { if (e.target === pop) closeOverlay(pop); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') qsa('.popup-about.is-open, .popup-form.is-open').forEach(closeOverlay);
+    });
+
+    // Slider "+" -> the in-card .slide-popup (overlay within the slide)
+    qsa('.plus-button').forEach(function (plus) {
+      var slide = plus.closest('.w-slide') || plus.closest('.slide-content') || plus.parentElement;
+      var pop = slide && slide.querySelector('.slide-popup');
+      if (!pop) return;
+      var content = pop.querySelector('.slide-popup-content');
+      var open = false;
+      plus.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        open = !open;
+        pop.style.display = open ? 'flex' : 'none';
+        if (content) { content.style.display = open ? 'flex' : 'none'; content.style.opacity = open ? '1' : '0'; }
+        plus.classList.toggle('is-active', open);
+      });
+      var close = pop.querySelector('.close-button, .slide-popup-close');
+      if (close) close.addEventListener('click', function (e) {
+        e.stopPropagation(); open = false; pop.style.display = 'none';
+        if (content) { content.style.display = 'none'; content.style.opacity = '0'; }
+        plus.classList.remove('is-active');
       });
     });
   }
@@ -418,7 +479,7 @@
     // Fault isolation: one broken module must never take the others down.
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
-     initSmoothScroll, initRoomGallery].forEach(function (mod) {
+     initSmoothScroll, initRoomGallery, initPopups].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }

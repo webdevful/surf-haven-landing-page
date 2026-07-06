@@ -34,3 +34,19 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 /* Slider content visibility guard: nothing inside a slide may be hidden by a
    stray state — the reveal system is additive and must never own these. */
 .w-slide, .w-slide .image-wrap, .w-slide img { opacity: 1 !important; visibility: visible !important; }
+
+/* Arrow-tail button: brand-green fill + lift on hover (source IX3 behavior). */
+.arrow-tail-button{transition:background-color .3s ease, transform .3s ease}
+.secondary-button:hover .arrow-tail-button,
+.secondary-button:focus-visible .arrow-tail-button{
+  background-color:var(--color--base--accent);
+  transform:translate(2px,-2px);
+}
+.secondary-button:hover .arrow-tail-icon{color:var(--color--base--black)}
+/* Popup overlays: fade + scale in when JS adds .is-open. */
+.popup-about, .popup-form{opacity:0;transition:opacity .35s ease}
+.popup-about.is-open, .popup-form.is-open{opacity:1}
+.popup-about .layout-popup, .popup-form .layout-popup{
+  transform:scale(.94);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.popup-about.is-open .layout-popup, .popup-form.is-open .layout-popup{transform:scale(1)}
+.slide-popup{transition:opacity .3s ease}
