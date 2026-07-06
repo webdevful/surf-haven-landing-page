@@ -513,11 +513,27 @@
     });
   }
 
+  // Levels cards: desktop reveal is pure CSS (:hover/:focus-within). On mobile
+  // the chevron toggles .is-open (matches the source Webflow accordion behavior).
+  function initLevelsCards() {
+    const cards = qsa('.levels-card');
+    if (!cards.length) return;
+    cards.forEach(function (card) {
+      const chevron = qs('.chevron-button', card);
+      if (!chevron) return;
+      chevron.addEventListener('click', function () {
+        const open = card.classList.toggle('is-open');
+        chevron.classList.toggle('is-active', open);
+      });
+    });
+  }
+
   function boot() {
     // Fault isolation: one broken module must never take the others down.
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
-     initSmoothScroll, initRoomGallery, initPopups, initButtonRoll].forEach(function (mod) {
+     initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
+     initLevelsCards].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
