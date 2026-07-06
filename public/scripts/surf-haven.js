@@ -153,10 +153,12 @@
   }
 
   function initWebflowSliders() {
-    // Port the source's Webflow sliders onto the registered tech stack
-    // (Swiper 11, vendored locally): remap w-slider markup to Swiper DOM at
-    // runtime and drive arrows/autoplay through real Swiper instances.
-    if (typeof Swiper === 'undefined') return;
+    // Faithful Webflow w-slider engine. Architecture (from the source CSS):
+    // the MASK's width defines ONE slide (team 33%, testimonials 49%) and can
+    // have overflow:visible so neighbors show beside it; slides are 100% of
+    // the mask with a %-margin gutter; data-animation="slide" advances one
+    // mask-width (+gutter) per step. We translate slides by the measured
+    // step, honoring data-duration/easing/autoplay/infinite.
     qsa('.w-slider').forEach(function (slider) {
       var mask = qs('.w-slider-mask', slider);
       if (!mask) return;
@@ -164,23 +166,55 @@
         return c.classList.contains('w-slide');
       });
       if (slides.length < 2) return;
-      slider.classList.add('swiper');
-      mask.classList.add('swiper-wrapper');
-      slides.forEach(function (s) { s.classList.add('swiper-slide'); });
+
+      var duration = parseInt(slider.getAttribute('data-duration') || '500', 10);
+      var easing = slider.getAttribute('data-easing') || 'ease';
       var autoplay = slider.getAttribute('data-autoplay') === 'true';
-      var delay = Math.max(parseInt(slider.getAttribute('data-delay') || '4000', 10), 2500);
-      var duration = Math.min(parseInt(slider.getAttribute('data-duration') || '300', 10), 300);
-      new Swiper(slider, {
-        loop: true,
-        speed: 150,
-        slidesPerView: 'auto',
-        loopPreventsSliding: false,
-        autoplay: autoplay ? { delay: delay, pauseOnMouseEnter: true } : false,
-        navigation: {
-          prevEl: qs('.w-slider-arrow-left', slider),
-          nextEl: qs('.w-slider-arrow-right', slider)
-        }
-      });
+      var delay = Math.max(parseInt(slider.getAttribute('data-delay') || '4000', 10), 2000);
+      var index = 0;
+      var timer = null;
+
+      function stepPct() {
+        var w = slides[0].getBoundingClientRect().width;
+        var mr = parseFloat(getComputedStyle(slides[0]).marginRight) || 0;
+        return w > 0 ? ((w + mr) / w) * 100 : 100;
+      }
+      function render(animated) {
+        var offset = -index * stepPct();
+        slides.forEach(function (s) {
+          s.style.transition = animated ? ('transform ' + duration + 'ms ' + easing) : 'none';
+          s.style.transform = 'translateX(' + offset + '%)';
+        });
+        slides.forEach(function (s, k) {
+          s.setAttribute('aria-hidden', k === index ? 'false' : 'true');
+        });
+      }
+      function goTo(i, animated) {
+        index = ((i % slides.length) + slides.length) % slides.length;
+        render(animated !== false);
+      }
+      function restart() {
+        if (!autoplay) return;
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () { goTo(index + 1); }, delay);
+      }
+      // Arrows may live OUTSIDE the slider (team section header) and point
+      // at the mask via aria-controls — bind by the ARIA link, not containment.
+      function arrow(side) {
+        var inSlider = qs('.w-slider-arrow-' + side, slider);
+        if (inSlider) return inSlider;
+        if (mask.id) return qs('.w-slider-arrow-' + side + '[aria-controls="' + mask.id + '"]');
+        return null;
+      }
+      var prev = arrow('left');
+      var next = arrow('right');
+      if (prev) prev.addEventListener('click', function () { goTo(index - 1); restart(); });
+      if (next) next.addEventListener('click', function () { goTo(index + 1); restart(); });
+      slider.addEventListener('mouseenter', function () { if (timer) clearInterval(timer); });
+      slider.addEventListener('mouseleave', restart);
+      window.addEventListener('resize', function () { render(false); });
+      goTo(0, false);
+      restart();
     });
   }
 
@@ -353,10 +387,17 @@
     // Section content fades/rises in — every section, uniformly.
     qsa('section').forEach(function (section) {
       var items = qsa(
-        '.card, .w-slide, .day-accordion, .room-accordion, .pricing-card, ' +
-        '.eyebrow-group, .icon-eyebrow-group, p, .primary-button, .secondary-button',
+        '.icon-eyebrow-group, .eyebrow-group, p, .primary-button, ' +
+        '.secondary-button, .pricing-card, .card, .badge, .video-cta, ' +
+        '.image-wrap, .contact-row',
         section
-      ).filter(function (el) { return !el.closest('.gsap_split_line'); }).slice(0, 24);
+      ).filter(function (el) {
+        // Sliders and accordions own their internals — the reveal system
+        // must never set initial states inside them (that is exactly how
+        // carousels break invisibly).
+        return !el.closest('.w-slider, .day-accordion, .room-accordion, ' +
+                           '.w-dropdown, .gsap_split_line, footer');
+      }).slice(0, 24);
       if (!items.length) return;
       gsap.set(items, { autoAlpha: 0, y: 28 });
       gsap.to(items, {
