@@ -1,0 +1,9 @@
+{
+  "provider": "unsplash",
+  "id": "bnMPFPuSCI0",
+  "author": "Guillaume Marques",
+  "url": "https://unsplash.com/photos/bnMPFPuSCI0",
+  "query": "bali temple architecture",
+  "format": "RGBA 50x50 circular-masked (matches source emoji format)",
+  "license": "Unsplash License (free, commercial ok)"
+}

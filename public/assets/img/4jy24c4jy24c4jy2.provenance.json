@@ -1,0 +1,9 @@
+{
+  "provider": "unsplash",
+  "id": "V63oM8OPJSo",
+  "author": "Thomas Lefebvre",
+  "url": "https://unsplash.com/photos/V63oM8OPJSo",
+  "query": "palm trees tropical sky",
+  "format": "RGBA 50x50 circular-masked (matches source emoji format)",
+  "license": "Unsplash License (free, commercial ok)"
+}
