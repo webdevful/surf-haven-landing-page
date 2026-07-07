@@ -513,6 +513,68 @@
     });
   }
 
+  /* PROGRAM DAY FOLLOW-CURSOR — the source's signature Program interaction.
+   * Each `.day-accordion-header` ships a `.follow-cursor-wrap > .follow-cursor`
+   * carrying that day's image (CSS: absolute, inset:0, opacity:0, rotate(-10deg),
+   * pointer-events:none). On hover we fade the wrap in and translate the card so
+   * its centre tracks the pointer; on leave we fade it out. Desktop-only —
+   * skipped on coarse/no-hover pointers (CSS also hides the wrap there) and when
+   * the user prefers reduced motion. Uses GSAP quickTo for smooth follow with a
+   * plain-transform fallback so it still works if GSAP failed to load. */
+  function initFollowCursor() {
+    var canHover = !window.matchMedia ||
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var reduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!canHover || reduced) return;
+
+    var hasGsap = typeof gsap !== 'undefined';
+
+    qsa('.day-accordion-header').forEach(function (header) {
+      var wrap = qs('.follow-cursor-wrap', header);
+      var card = wrap && qs('.follow-cursor', wrap);
+      if (!wrap || !card) return;
+
+      // Take the card out of the wrap's flex centring so we position it freely
+      // relative to the (now position:relative) header; keep the source tilt.
+      card.style.position = 'absolute';
+      card.style.top = '0';
+      card.style.left = '0';
+      card.style.margin = '0';
+      wrap.style.margin = '0';
+
+      var setX, setY;
+      if (hasGsap) {
+        gsap.set(card, { rotation: -10, xPercent: 0, yPercent: 0 });
+        setX = gsap.quickTo(card, 'x', { duration: 0.45, ease: 'power3.out' });
+        setY = gsap.quickTo(card, 'y', { duration: 0.45, ease: 'power3.out' });
+      }
+
+      function move(e) {
+        var rect = header.getBoundingClientRect();
+        var x = e.clientX - rect.left - card.offsetWidth / 2;
+        var y = e.clientY - rect.top - card.offsetHeight / 2;
+        if (hasGsap) {
+          setX(x); setY(y);
+        } else {
+          card.style.transform =
+            'translate(' + x + 'px,' + y + 'px) rotate(-10deg)';
+        }
+      }
+
+      header.addEventListener('mouseenter', function (e) {
+        move(e);
+        if (hasGsap) gsap.to(wrap, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+        else { wrap.style.transition = 'opacity .3s ease'; wrap.style.opacity = '1'; }
+      });
+      header.addEventListener('mousemove', move);
+      header.addEventListener('mouseleave', function () {
+        if (hasGsap) gsap.to(wrap, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+        else wrap.style.opacity = '0';
+      });
+    });
+  }
+
   // Levels cards: desktop reveal is pure CSS (:hover/:focus-within). On mobile
   // the chevron toggles .is-open (matches the source Webflow accordion behavior).
   function initLevelsCards() {
@@ -533,7 +595,7 @@
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
      initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
-     initLevelsCards].forEach(function (mod) {
+     initLevelsCards, initFollowCursor].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
