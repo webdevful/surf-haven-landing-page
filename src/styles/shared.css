@@ -103,3 +103,18 @@ a:hover > .arrow-tail-button .arrow-tail-icon{color:var(--color--base--black)}
 .star-icon { transform-origin: center;
   animation: star-twinkle 2.4s cubic-bezier(.45,0,.55,1) infinite; will-change: transform, opacity; }
 @media (prefers-reduced-motion: reduce) { .star-icon { animation: none; } }
+
+/* Team cards (Meet the team) — click a card to expand the frosted bio popup.
+   The `.slide-popup` ships as a 2.5rem frosted circle pinned to the + corner
+   (base: position:absolute; inset:0 0 auto auto; width/height 2.5rem;
+   overflow:hidden). On `.is-open` it grows to fill the card, the bio fades in,
+   and the + rotates into a ×. JS toggles `.is-open` (see initTeamCards). */
+.slide.is-team .slide-popup{display:flex;opacity:0;pointer-events:none;z-index:2;
+  transition:width .5s cubic-bezier(.62,.05,0,1),height .5s cubic-bezier(.62,.05,0,1),opacity .35s ease}
+.slide.is-team.is-open .slide-popup{width:100%;height:100%;opacity:1;pointer-events:auto}
+.slide.is-team .slide-popup-content{display:flex;opacity:0;transition:opacity .4s ease .12s}
+.slide.is-team.is-open .slide-popup-content{opacity:1}
+/* keep the name / role / + badges above the expanding overlay */
+.slide.is-team .slide-content-meta{position:relative;z-index:3}
+.slide.is-team .plus-icon{transition:transform .45s cubic-bezier(.62,.05,0,1)}
+.slide.is-team.is-open .plus-icon{transform:rotate(135deg)}

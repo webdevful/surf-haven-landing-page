@@ -458,26 +458,31 @@
       if (e.key === 'Escape') qsa('.popup-about.is-open, .popup-form.is-open').forEach(closeOverlay);
     });
 
-    // Slider "+" -> the in-card .slide-popup (overlay within the slide)
-    qsa('.plus-button').forEach(function (plus) {
-      var slide = plus.closest('.w-slide') || plus.closest('.slide-content') || plus.parentElement;
-      var pop = slide && slide.querySelector('.slide-popup');
-      if (!pop) return;
-      var content = pop.querySelector('.slide-popup-content');
-      var open = false;
-      plus.addEventListener('click', function (e) {
-        e.preventDefault(); e.stopPropagation();
-        open = !open;
-        pop.style.display = open ? 'flex' : 'none';
-        if (content) { content.style.display = open ? 'flex' : 'none'; content.style.opacity = open ? '1' : '0'; }
-        plus.classList.toggle('is-active', open);
+    // Team-card popups are handled by initTeamCards (class-driven expand).
+  }
+
+  /* TEAM CARDS (Meet the team) — click the + button, a name/role badge, or the
+   * card to expand the frosted bio popup. The source's `.slide-popup` ships as a
+   * 2.5rem frosted circle pinned to the + corner (position:absolute; inset:0 0
+   * auto auto; overflow:hidden) and the Webflow IX grows it to fill the whole
+   * card while fading the bio in and turning the + into a ×. We drive that with
+   * an `.is-open` class on the slide (CSS does the expand/fade/rotate in
+   * shared.css). Single-open; click the card again, another card, or outside to
+   * close. The old initPopups handler just flipped display on the 2.5rem box, so
+   * the bio overflowed the tiny circle (owner-reported leak) and never expanded. */
+  function initTeamCards() {
+    var slides = qsa('.slide.is-team');
+    if (!slides.length) return;
+    function closeAll() { slides.forEach(function (s) { s.classList.remove('is-open'); }); }
+    slides.forEach(function (slide) {
+      slide.addEventListener('click', function () {
+        var willOpen = !slide.classList.contains('is-open');
+        closeAll();
+        slide.classList.toggle('is-open', willOpen);
       });
-      var close = pop.querySelector('.close-button, .slide-popup-close');
-      if (close) close.addEventListener('click', function (e) {
-        e.stopPropagation(); open = false; pop.style.display = 'none';
-        if (content) { content.style.display = 'none'; content.style.opacity = '0'; }
-        plus.classList.remove('is-active');
-      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.slide.is-team')) closeAll();
     });
   }
 
@@ -648,7 +653,8 @@
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
      initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
-     initLevelsCards, initFollowCursor, initFaqAccordion, initArrowRoll].forEach(function (mod) {
+     initLevelsCards, initFollowCursor, initFaqAccordion, initArrowRoll,
+     initTeamCards].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
