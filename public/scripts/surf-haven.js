@@ -513,14 +513,19 @@
     });
   }
 
-  /* PROGRAM DAY FOLLOW-CURSOR — the source's signature Program interaction.
-   * Each `.day-accordion-header` ships a `.follow-cursor-wrap > .follow-cursor`
-   * carrying that day's image (CSS: absolute, inset:0, opacity:0, rotate(-10deg),
-   * pointer-events:none). On hover we fade the wrap in and translate the card so
-   * its centre tracks the pointer; on leave we fade it out. Desktop-only —
-   * skipped on coarse/no-hover pointers (CSS also hides the wrap there) and when
-   * the user prefers reduced motion. Uses GSAP quickTo for smooth follow with a
-   * plain-transform fallback so it still works if GSAP failed to load. */
+  /* PROGRAM DAY FOLLOW-CURSOR — faithful to the source's Webflow "mouse move
+   * over element" interaction. Source structure (from the captured markup):
+   * the `.follow-cursor-wrap` ITSELF is the animated element — it ships
+   *   transform: translate3d(0%,0%,0) ...; display:flex; opacity:0
+   * and Webflow nudges it by a SMALL PERCENT of its own box as the cursor moves
+   * inside that day row. It is NOT a 1:1 cursor tracker: the image stays parked
+   * at its CSS home (flex-centred + margin-left:20% → right-of-centre of the
+   * row) and only drifts a little, so it never leaves its lane, never overlaps
+   * neighbouring rows, and (with pointer-events:none) never blocks the chevron.
+   * The inner `.follow-cursor` only carries the static rotate(-10deg) tilt.
+   * Desktop-only — skipped on coarse/no-hover pointers (CSS also hides the wrap
+   * there) and on prefers-reduced-motion. GSAP quickTo smooths the drift; a
+   * plain translate3d fallback keeps it working if GSAP failed to load. */
   function initFollowCursor() {
     var canHover = !window.matchMedia ||
       window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -529,37 +534,28 @@
     if (!canHover || reduced) return;
 
     var hasGsap = typeof gsap !== 'undefined';
+    // Drift range as a percent of the wrap's own box (Webflow moves in %).
+    // Small on purpose: subtle parallax, image stays parked near its home.
+    var RANGE_X = 6, RANGE_Y = 10;
 
     qsa('.day-accordion-header').forEach(function (header) {
       var wrap = qs('.follow-cursor-wrap', header);
-      var card = wrap && qs('.follow-cursor', wrap);
-      if (!wrap || !card) return;
-
-      // Take the card out of the wrap's flex centring so we position it freely
-      // relative to the (now position:relative) header; keep the source tilt.
-      card.style.position = 'absolute';
-      card.style.top = '0';
-      card.style.left = '0';
-      card.style.margin = '0';
-      wrap.style.margin = '0';
+      if (!wrap || !qs('.follow-cursor', wrap)) return;
 
       var setX, setY;
       if (hasGsap) {
-        gsap.set(card, { rotation: -10, xPercent: 0, yPercent: 0 });
-        setX = gsap.quickTo(card, 'x', { duration: 0.45, ease: 'power3.out' });
-        setY = gsap.quickTo(card, 'y', { duration: 0.45, ease: 'power3.out' });
+        setX = gsap.quickTo(wrap, 'xPercent', { duration: 0.6, ease: 'power3.out' });
+        setY = gsap.quickTo(wrap, 'yPercent', { duration: 0.6, ease: 'power3.out' });
       }
 
       function move(e) {
-        var rect = header.getBoundingClientRect();
-        var x = e.clientX - rect.left - card.offsetWidth / 2;
-        var y = e.clientY - rect.top - card.offsetHeight / 2;
-        if (hasGsap) {
-          setX(x); setY(y);
-        } else {
-          card.style.transform =
-            'translate(' + x + 'px,' + y + 'px) rotate(-10deg)';
-        }
+        var r = header.getBoundingClientRect();
+        // Normalised cursor position within the row, clamped to [-1, 1].
+        var nx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+        var ny = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+        var x = nx * RANGE_X, y = ny * RANGE_Y;
+        if (hasGsap) { setX(x); setY(y); }
+        else wrap.style.transform = 'translate3d(' + x + '%,' + y + '%,0)';
       }
 
       header.addEventListener('mouseenter', function (e) {
@@ -569,8 +565,13 @@
       });
       header.addEventListener('mousemove', move);
       header.addEventListener('mouseleave', function () {
-        if (hasGsap) gsap.to(wrap, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-        else wrap.style.opacity = '0';
+        if (hasGsap) {
+          gsap.to(wrap, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+          setX(0); setY(0);
+        } else {
+          wrap.style.opacity = '0';
+          wrap.style.transform = 'translate3d(0%,0%,0)';
+        }
       });
     });
   }
