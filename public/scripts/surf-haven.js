@@ -481,35 +481,68 @@
     });
   }
 
-  /* BUTTON TEXT-ROLL — on hover the label slides up and an identical copy
-   * rolls in from below (the source IX3 button micro-interaction). Primary
-   * buttons already ship .button-text-wrap > .button-text; secondary buttons
-   * carry a plain label div, so we wrap it into the same structure. The copy
-   * is drawn by CSS ::after content: attr(data-label). */
+  /* BUTTON TEXT-ROLL — on hover the label slides up and an identical copy rolls
+   * in from below (the source IX3 button micro-interaction). Only buttons the
+   * SOURCE authored with `.button-text-wrap > .button-text` get the roll — i.e.
+   * primary and tertiary buttons. Secondary buttons ship a plain label div and a
+   * `.arrow-tail-button`; the source gives THEM only the arrow-tail hover
+   * (arrow lifts + circle turns accent), NOT a text-roll. So we must not
+   * fabricate a wrap for secondary buttons (that wrongly rolled e.g. the FAQ
+   * "Contact Us" label). The duplicate copy is drawn by CSS ::after
+   * content: attr(data-label). */
   function initButtonRoll() {
-    // primary buttons: label already wrapped — just set the duplicate text
+    // Source-authored roll buttons only: label already wrapped in
+    // .button-text-wrap (primary + tertiary). Just set the duplicate text.
     qsa('.button-text').forEach(function (el) {
       var label = el.textContent.trim();
       if (!el.getAttribute('data-label')) el.setAttribute('data-label', label);
       var wrap = el.closest('.button-text-wrap');
       if (wrap && !wrap.getAttribute('data-label')) wrap.setAttribute('data-label', label);
     });
-    // secondary buttons: wrap the plain label div into the roll structure
-    qsa('.secondary-button').forEach(function (btn) {
-      var label = null;
-      Array.prototype.forEach.call(btn.children, function (c) {
-        if (c.tagName === 'DIV' && !c.classList.contains('arrow-tail-button') &&
-            !c.classList.contains('button-text-wrap')) label = label || c;
+  }
+
+  /* FAQ accordion (Section 13) — same height-animated open/close as the day
+   * accordion, single-open. The authored bodies ship height:0; clicking a
+   * question expands it and collapses the others. */
+  function initFaqAccordion() {
+    const accordions = qsa('.faq-accordion');
+    if (!accordions.length) return;
+
+    accordions.forEach(closeFaqAccordion);
+
+    accordions.forEach(function (acc) {
+      const header = qs('.faq-accordion-header', acc);
+      if (!header) return;
+      header.addEventListener('click', function () {
+        const isOpen = acc.classList.contains('is-active');
+        accordions.forEach(function (a) { closeFaqAccordion(a); });
+        if (!isOpen) openFaqAccordion(acc);
       });
-      if (!label) return;
-      var txt = label.textContent.trim();
-      if (!txt) return;
-      var wrap = document.createElement('div'); wrap.className = 'button-text-wrap';
-      wrap.setAttribute('data-label', txt);
-      var inner = document.createElement('div'); inner.className = 'button-text';
-      inner.textContent = txt; inner.setAttribute('data-label', txt);
-      wrap.appendChild(inner);
-      label.replaceWith(wrap);
+    });
+  }
+
+  function closeFaqAccordion(acc) {
+    const body = qs('.faq-accordion-body', acc);
+    const chevron = qs('.chevron-button', acc);
+    if (!body) return;
+    body.style.height = body.offsetHeight + 'px';
+    requestAnimationFrame(function () { body.style.height = '0px'; });
+    acc.classList.remove('is-active');
+    if (chevron) chevron.classList.remove('is-active');
+  }
+
+  function openFaqAccordion(acc) {
+    const body = qs('.faq-accordion-body', acc);
+    const chevron = qs('.chevron-button', acc);
+    if (!body) return;
+    acc.classList.add('is-active');
+    if (chevron) chevron.classList.add('is-active');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { body.style.height = body.scrollHeight + 'px'; });
+    });
+    body.addEventListener('transitionend', function onEnd() {
+      if (acc.classList.contains('is-active')) body.style.height = 'auto';
+      body.removeEventListener('transitionend', onEnd);
     });
   }
 
@@ -596,7 +629,7 @@
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
      initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
-     initLevelsCards, initFollowCursor].forEach(function (mod) {
+     initLevelsCards, initFollowCursor, initFaqAccordion].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
