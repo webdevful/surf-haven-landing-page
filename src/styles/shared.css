@@ -64,3 +64,15 @@ a:hover > .arrow-tail-button,
 .primary-button:focus-visible .button-text,.secondary-button:focus-visible .button-text,.tertiary-button:focus-visible .button-text{transform:translateY(-105%)}
 .primary-button:hover .button-text-wrap::after,.secondary-button:hover .button-text-wrap::after,.tertiary-button:hover .button-text-wrap::after,
 .primary-button:focus-visible .button-text-wrap::after,.secondary-button:focus-visible .button-text-wrap::after,.tertiary-button:focus-visible .button-text-wrap::after{transform:translateY(0)}
+
+/* Section eyebrow star — looping "twinkle / polish" (source IX3 loop with GSAP
+   CustomWiggle, reimplemented). The star scales down and rotates (comes and
+   goes) on an infinite ease-in-out loop; applied to every .star-icon so all
+   section eyebrows share the one behavior. Honours prefers-reduced-motion. */
+@keyframes star-twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 1; }
+  50%      { transform: rotate(90deg) scale(.4); opacity: .45; }
+}
+.star-icon { transform-origin: center;
+  animation: star-twinkle 2.4s cubic-bezier(.45,0,.55,1) infinite; will-change: transform, opacity; }
+@media (prefers-reduced-motion: reduce) { .star-icon { animation: none; } }
