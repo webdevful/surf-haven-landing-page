@@ -35,17 +35,42 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
    stray state — the reveal system is additive and must never own these. */
 .w-slide, .w-slide .image-wrap, .w-slide img { opacity: 1 !important; visibility: visible !important; }
 
-/* Arrow-tail button: brand-green fill + lift on hover (source IX3 behavior). */
-.arrow-tail-button{transition:background-color .3s ease, transform .3s ease}
-/* arrow hover brand (all button families) */
+/* Arrow-tail button: brand-green fill + ARROW-ROLL on hover (source IX3
+   arrow-tail-button hover family — the arrow's equivalent of the button
+   text-roll). On hover the circle fills accent, the arrow slides out toward the
+   top-right, and a duplicate arrow (.is-absolute, cloned in JS) rolls in from
+   the bottom-left. overflow:hidden on the button clips the off-centre icons. */
+.arrow-tail-button{transition:background-color .3s ease}
+.arrow-tail-icon{transition:transform .45s cubic-bezier(.19,1,.22,1)}
+/* duplicate icon starts parked off the bottom-left, centred box */
+.arrow-tail-button .arrow-tail-icon.is-absolute{inset:0;width:auto;height:100%;
+  align-self:auto;display:flex;align-items:center;justify-content:center;
+  transform:translate(-120%,120%)}
+/* arrow hover brand (all button families that carry an arrow-tail) */
 .secondary-button:hover .arrow-tail-button,
 .tertiary-button:hover .arrow-tail-button,
+.primary-button:hover .arrow-tail-button,
 a:hover > .arrow-tail-button,
-.secondary-button:focus-visible .arrow-tail-button{
+.secondary-button:focus-visible .arrow-tail-button,
+.tertiary-button:focus-visible .arrow-tail-button{
   background-color:var(--color--base--accent);
-  transform:translate(2px,-2px);
 }
-.secondary-button:hover .arrow-tail-icon{color:var(--color--base--black)}
+/* the roll: outgoing arrow exits top-right, incoming duplicate lands centred */
+.secondary-button:hover .arrow-tail-icon:not(.is-absolute),
+.tertiary-button:hover .arrow-tail-icon:not(.is-absolute),
+.primary-button:hover .arrow-tail-icon:not(.is-absolute),
+a:hover > .arrow-tail-button .arrow-tail-icon:not(.is-absolute),
+.secondary-button:focus-visible .arrow-tail-icon:not(.is-absolute),
+.tertiary-button:focus-visible .arrow-tail-icon:not(.is-absolute){transform:translate(120%,-120%)}
+.secondary-button:hover .arrow-tail-icon.is-absolute,
+.tertiary-button:hover .arrow-tail-icon.is-absolute,
+.primary-button:hover .arrow-tail-icon.is-absolute,
+a:hover > .arrow-tail-button .arrow-tail-icon.is-absolute,
+.secondary-button:focus-visible .arrow-tail-icon.is-absolute,
+.tertiary-button:focus-visible .arrow-tail-icon.is-absolute{transform:translate(0,0)}
+.secondary-button:hover .arrow-tail-icon,
+.tertiary-button:hover .arrow-tail-icon,
+a:hover > .arrow-tail-button .arrow-tail-icon{color:var(--color--base--black)}
 /* Popup overlays: fade + scale in when JS adds .is-open. */
 .popup-about, .popup-form{opacity:0;transition:opacity .35s ease}
 .popup-about.is-open, .popup-form.is-open{opacity:1}

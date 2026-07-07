@@ -501,6 +501,25 @@
     });
   }
 
+  /* ARROW-TAIL ROLL — the arrow's version of the button text-roll (source
+   * arrow-tail-button hover family). On hover the arrow slides out toward the
+   * top-right and a duplicate arrow rolls in from the bottom-left. The source
+   * ships a second `.arrow-tail-icon.is-absolute` for the incoming copy; our
+   * authored markup carries only one icon, so we clone it here. The motion is
+   * driven by CSS (see shared.css). Runs on EVERY arrow-tail-button so the
+   * behaviour is consistent across all sections. */
+  function initArrowRoll() {
+    qsa('.arrow-tail-button').forEach(function (btn) {
+      var icon = qs('.arrow-tail-icon', btn);
+      if (!icon) return;
+      if (qs('.arrow-tail-icon.is-absolute', btn)) return; // duplicate already present
+      var clone = icon.cloneNode(true);
+      clone.classList.add('is-absolute');
+      clone.setAttribute('aria-hidden', 'true');
+      btn.appendChild(clone);
+    });
+  }
+
   /* FAQ accordion (Section 13) — same height-animated open/close as the day
    * accordion, single-open. The authored bodies ship height:0; clicking a
    * question expands it and collapses the others. */
@@ -629,7 +648,7 @@
     [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
      initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
      initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
-     initLevelsCards, initFollowCursor, initFaqAccordion].forEach(function (mod) {
+     initLevelsCards, initFollowCursor, initFaqAccordion, initArrowRoll].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }
