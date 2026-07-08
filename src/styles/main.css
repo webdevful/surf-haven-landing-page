@@ -10,3 +10,12 @@
 @media (hover:hover) and (pointer:fine){.levels-card:hover .badge,.levels-card:focus-within .badge{background-color:var(--color--base--accent);border-color:var(--color--base--accent)}}
 .levels-card.is-open .badge{background-color:var(--color--base--accent);border-color:var(--color--base--accent)}
 @media (prefers-reduced-motion:reduce){.levels-card .badge{transition:none}}
+/* Footer section repair — LPL_REPAIR-surf-haven-footer-2026-07-07
+   Restores source (waveyu.webflow.io) footer fidelity:
+   (1) nav-link underline fills in on hover  (2) big title reacts on hover
+   (3) footer brand logo renders uncut (was cropped by object-fit:cover + 7rem cap) */
+.footer-link:hover .line-fill-color,.footer-link:focus-visible .line-fill-color{transform:translate3d(0,0,0)}
+.big-letter{transition:color .45s cubic-bezier(.625,.05,0,1)}
+.big-letter-wrap:hover .big-letter{color:var(--color--base--white)}
+.footer-brand-link,.footer-brand-link.w--current{max-width:none}
+.footer-brand-link img{width:auto;height:2.5rem;max-width:100%;object-fit:contain;display:block}
