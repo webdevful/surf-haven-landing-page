@@ -23,7 +23,7 @@ html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-family:sans-se
 .navbar{transition:background-color .35s ease,border-color .35s ease}
 .navbar.is-scrolled{background-color:rgba(247,247,247,.997);border-bottom:1px solid rgba(33,33,33,.2)}
 .navbar.is-scrolled .navbar-link,.navbar.is-scrolled .w-dropdown-toggle,.navbar.is-scrolled .dates{color:#212121}
-.navbar.is-scrolled .w-dropdown-list{background-color:#f6f6f6}
+.navbar.is-scrolled .w-dropdown-list{background-color:var(--color--base--accent)}
 
 /* Webflow w-slider base layout (absent from the site export; the mask's
    width defines one slide, overflow set per design class). */
