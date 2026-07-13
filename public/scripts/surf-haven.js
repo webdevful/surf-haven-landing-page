@@ -370,6 +370,36 @@
     }
   }
 
+  /* Navbar link underline — the source IX2 hover pair "Navbar link underline
+   * [show]/[hide]" (WEBFLOW-IX2.json a-84/a-50) is DIRECTIONAL: the 1px line
+   * enters from the LEFT (-110% -> 0, 600ms outQuint) and exits to the RIGHT
+   * (0 -> 110%) before returning to display:none, so plain CSS :hover (which
+   * would reverse back out the left) cannot reproduce it. Desktop-only by
+   * construction: the source hides .nav-underline-wrap at <=991px. */
+  function initNavUnderline() {
+    var EASE_OUT_QUINT = 'cubic-bezier(.23, 1, .32, 1)';
+    var reduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    qsa('.navbar-link, .navbar-dropdown-toggle').forEach(function (item) {
+      var line = qs('.nav-underline', item);
+      if (!line) return;
+      item.addEventListener('mouseenter', function () {
+        line.style.transition = 'none';
+        line.style.transform = 'translateX(-110%)';
+        line.style.display = 'flex';
+        void line.offsetWidth; // commit the parked position before animating
+        line.style.transition = reduced ? 'none' : 'transform 600ms ' + EASE_OUT_QUINT;
+        line.style.transform = 'translateX(0%)';
+      });
+      item.addEventListener('mouseleave', function () {
+        line.style.transform = 'translateX(110%)';
+      });
+      line.addEventListener('transitionend', function () {
+        if (line.style.transform === 'translateX(110%)') line.style.display = 'none';
+      });
+    });
+  }
+
   /* Full-page scroll reveals on the clean DOM (GSAP + ScrollTrigger). */
   function initReveal() {
     // ADDITIVE reveal: content is visible by default (CSS never hides it).
@@ -650,11 +680,11 @@
 
   function boot() {
     // Fault isolation: one broken module must never take the others down.
-    [initNavbar, initReveal, initDayAccordion, initDayTabs, initRoomAccordion,
-     initOverlay, initWebflowSliders, initDropdowns, initVideoLightbox,
-     initSmoothScroll, initRoomGallery, initPopups, initButtonRoll,
-     initLevelsCards, initFollowCursor, initFaqAccordion, initArrowRoll,
-     initTeamCards].forEach(function (mod) {
+    [initNavbar, initNavUnderline, initReveal, initDayAccordion, initDayTabs,
+     initRoomAccordion, initOverlay, initWebflowSliders, initDropdowns,
+     initVideoLightbox, initSmoothScroll, initRoomGallery, initPopups,
+     initButtonRoll, initLevelsCards, initFollowCursor, initFaqAccordion,
+     initArrowRoll, initTeamCards].forEach(function (mod) {
       try { mod(); } catch (err) {
         console.error('[surf-haven] ' + (mod.name || 'module') + ' failed:', err && err.message);
       }

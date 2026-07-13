@@ -19,3 +19,24 @@
 .big-letter-wrap:hover .big-letter{color:var(--color--base--accent)}
 .footer-brand-link,.footer-brand-link.w--current{max-width:none}
 .footer-brand-link img{width:auto;height:2.5rem;max-width:100%;object-fit:contain;display:block}
+/* Header/disclosure interaction repair — LPL_REPAIR-surf-haven-dead-interactions-2026-07-13
+   Restores source (waveyu.webflow.io) authored interactions that shipped as dead
+   markup, transcribed from the decoded runtime data (captures/waveyu-webflow-io/
+   desktop/WEBFLOW-IX2.json), not re-measured:
+   (1) "Burger [open]/[close]" (a-99/a-100): while the mobile nav is open the two
+       cross lines rotate ±45deg and the top/bottom lines slide ±.5rem and scale
+       to 0 — 500ms ease. surf-haven.js already toggles .w--open on .burger-button.
+   (2) Chevron rotation (a-15/a-17/a-8/a-45): every chevron turns 180deg while its
+       accordion/dropdown is open. Accordions use the .is-active class
+       surf-haven.js already toggles (1s outQuint, the page's standard curve);
+       w-dropdowns use .w--open (500ms ease per the source pricing dropdown). */
+.burger-line{transition:transform .5s ease}
+.burger-button.w--open .burger-line.is-cross-1{transform:rotate(45deg)}
+.burger-button.w--open .burger-line.is-cross-2{transform:rotate(-45deg)}
+.burger-button.w--open .burger-line.is-top{transform:translateY(.5rem) scale(0)}
+.burger-button.w--open .burger-line.is-bottom{transform:translateY(-.5rem) scale(0)}
+.chevron-icon{transition:transform 1s cubic-bezier(.23,1,.32,1)}
+.w-dropdown .chevron-icon{transition:transform .5s ease}
+.chevron-icon.is-active,.is-active .chevron-icon,.w-dropdown.w--open .chevron-icon,.levels-card.is-open .chevron-icon{transform:rotate(180deg)}
+@media (hover:hover) and (pointer:fine){.levels-card:hover .chevron-icon,.levels-card:focus-within .chevron-icon{transform:rotate(180deg)}}
+@media (prefers-reduced-motion:reduce){.burger-line,.chevron-icon{transition:none}}
