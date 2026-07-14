@@ -40,3 +40,9 @@
 .chevron-icon.is-active,.is-active .chevron-icon,.w-dropdown.w--open .chevron-icon,.levels-card.is-open .chevron-icon{transform:rotate(180deg)}
 @media (hover:hover) and (pointer:fine){.levels-card:hover .chevron-icon,.levels-card:focus-within .chevron-icon{transform:rotate(180deg)}}
 @media (prefers-reduced-motion:reduce){.burger-line,.chevron-icon{transition:none}}
+/* Navbar scroll invert — mobile dropdown backdrop (source IX2 "Navbar scroll invert"
+   also drives .navbar-mobile-dropdown-bg; found by the IX2-derived Guard A markers).
+   The backdrop follows the inverted light surface once the navbar is scrolled. */
+.navbar-mobile-dropdown-bg{transition:background-color .3s}
+.navbar.is-scrolled .navbar-mobile-dropdown-bg{background-color:var(--color--backgrounds--bg-page)}
+@media (prefers-reduced-motion:reduce){.navbar-mobile-dropdown-bg{transition:none}}
